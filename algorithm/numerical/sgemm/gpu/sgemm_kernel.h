@@ -15,11 +15,13 @@
 /* Kernels
  */
 __global__ void sgemm_basic_kernel(const float *A, const float *B, float *C, int N);
+__global__ void sgemm_tiled_kernel(const float *A, const float *B, float *C, int N);
 
 
 /* Functions
  */
 void sgemm_basic(const float *A, const float *B, float *C, int N);
+void sgemm_tiled(const float *A, const float *B, float *C, int N);
 
 
 #endif

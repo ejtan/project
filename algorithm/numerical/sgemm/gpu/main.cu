@@ -33,6 +33,9 @@ int main(void)
     sgemm_basic(A, B, C_gpu, N);
     std::cout << " Error per element = " << compute_error(C_gpu, C_ref, N) << '\n';
 
+    sgemm_tiled(A, B, C_gpu, N);
+    std::cout << " Error per element = " << compute_error(C_gpu, C_ref, N) << '\n';
+
     delete[] A;
     delete[] B;
     delete[] C_gpu;
