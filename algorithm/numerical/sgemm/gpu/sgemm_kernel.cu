@@ -110,7 +110,7 @@ void sgemm_basic(const float *A, const float *B, float *C, int N)
 }
 
 
-/* sgemm_basic()
+/* sgemm_tiled()
  * Function for calling SGEMM.
  */
 void sgemm_tiled(const float *A, const float *B, float *C, int N)
