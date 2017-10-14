@@ -110,6 +110,22 @@ std::size_t BST<T>::size() const
 }
 
 
+/* max()
+ * Transverses the tree to the max value.
+ */
+template <typename T>
+T BST<T>::max() const
+{
+    // TODO: Add in handeling for when root is not allocated.
+    BST_Node<T> *node = root;
+
+    while (node->right)
+        node = node->right;
+
+    return node->data;
+}
+
+
 /* inorder_print()
  * Prints data in sorted order.
  */
