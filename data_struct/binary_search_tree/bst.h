@@ -19,11 +19,13 @@ class BST
         std::size_t n_ele;
 
         void delete_tree(BST_Node<T> *node);
+        void recursive_inorder_print(const BST_Node<T> *node) const;
     public:
         BST();
         ~BST();
         void insert(const T &value);
         std::size_t size() const;
+        void inorder_print() const;
 };
 
 

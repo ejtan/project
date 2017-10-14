@@ -20,6 +20,22 @@ void BST<T>::delete_tree(BST_Node<T> *node)
 }
 
 
+/* recursive_inorder_print()
+ * Recursively prints values in sorted order.
+ */
+template <typename T>
+void BST<T>::recursive_inorder_print(const BST_Node<T> *node) const
+{
+    if (node->left)
+        recursive_inorder_print(node->left);
+
+    std::cout << node->data << ' ';
+
+    if (node->right)
+        recursive_inorder_print(node->right);
+}
+
+
 /*-------------------------------------------------------------------------------------------------
  * PUBLIC METHODS
  *-----------------------------------------------------------------------------------------------*/
@@ -92,3 +108,15 @@ std::size_t BST<T>::size() const
 {
     return n_ele;
 }
+
+
+/* inorder_print()
+ * Prints data in sorted order.
+ */
+template <typename T>
+void BST<T>::inorder_print() const
+{
+    recursive_inorder_print(root);
+    std::cout << std::endl;
+}
+
