@@ -117,6 +117,7 @@ template <typename T>
 T BST<T>::max() const
 {
     // TODO: Add in handeling for when root is not allocated.
+    // Consider returing iterator to node rather than value itself.
     BST_Node<T> *node = root;
 
     while (node->right)
@@ -133,6 +134,7 @@ template <typename T>
 T BST<T>::min() const
 {
     // TODO: Add in handeling for when root is not allocated.
+    // Consider returing iterator to node rather than value itself.
     BST_Node<T> *node = root;
 
     while (node->left)
