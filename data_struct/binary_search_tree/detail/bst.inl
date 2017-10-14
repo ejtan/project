@@ -2,6 +2,25 @@
 
 
 /*-------------------------------------------------------------------------------------------------
+ * PRIVATE METHODS
+ *-----------------------------------------------------------------------------------------------*/
+
+/* delete_tree()
+ * Deletes nodes in the BST recursively.
+ */
+template <typename T>
+void BST<T>::delete_tree(BST_Node<T> *node)
+{
+    if (node->right)
+        delete_tree(node->right);
+    if (node->left)
+        delete_tree(node->left);
+
+    delete node;
+}
+
+
+/*-------------------------------------------------------------------------------------------------
  * PUBLIC METHODS
  *-----------------------------------------------------------------------------------------------*/
 
@@ -20,6 +39,8 @@ BST<T>::BST()
 template <typename T>
 BST<T>::~BST()
 {
+    if (root)
+        delete_tree(root);
 }
 
 

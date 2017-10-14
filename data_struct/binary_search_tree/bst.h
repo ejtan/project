@@ -18,6 +18,7 @@ class BST
         BST_Node<T> *root;
         std::size_t n_ele;
 
+        void delete_tree(BST_Node<T> *node);
     public:
         BST();
         ~BST();
