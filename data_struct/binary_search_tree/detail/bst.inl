@@ -126,6 +126,22 @@ T BST<T>::max() const
 }
 
 
+/* min()
+ * Transverses the tree to the min value.
+ */
+template <typename T>
+T BST<T>::min() const
+{
+    // TODO: Add in handeling for when root is not allocated.
+    BST_Node<T> *node = root;
+
+    while (node->left)
+        node = node->left;
+
+    return node->data;
+}
+
+
 /* inorder_print()
  * Prints data in sorted order.
  */

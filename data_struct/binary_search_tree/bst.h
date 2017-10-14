@@ -26,6 +26,7 @@ class BST
         void insert(const T &value);
         std::size_t size() const;
         T max() const;
+        T min() const;
         void inorder_print() const;
 };
 
