@@ -144,6 +144,33 @@ T BST<T>::min() const
 }
 
 
+/* contains()
+ * Checks if a specific key is inside the tree.
+ */
+template <typename T>
+bool BST<T>::contains(const T &value) const
+{
+    if (!root) {
+        return false;
+    } else {
+        BST_Node<T> *curr = root;
+
+        while (curr) {
+            // If the value is neither less than or greater than the value in the current node,
+            // than the value must be the same as the current node.
+            if (value < curr->data)
+                curr = curr->left;
+            else if (value > curr->data)
+                curr = curr->right;
+            else
+                return true;
+        }
+
+        return false;
+    }
+}
+
+
 /* inorder_print()
  * Prints data in sorted order.
  */
@@ -153,4 +180,3 @@ void BST<T>::inorder_print() const
     recursive_inorder_print(root);
     std::cout << std::endl;
 }
-
