@@ -82,3 +82,13 @@ void BST<T>::insert(const T &value)
         n_ele++;
     }
 }
+
+
+/* size()
+ * Returns the number of allocated elements in the tree.
+ */
+template <typename T>
+std::size_t BST<T>::size() const
+{
+    return n_ele;
+}

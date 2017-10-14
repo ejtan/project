@@ -23,6 +23,7 @@ class BST
         BST();
         ~BST();
         void insert(const T &value);
+        std::size_t size() const;
 };
 
 
