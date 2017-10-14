@@ -21,6 +21,7 @@ class BST
     public:
         BST();
         ~BST();
+        void insert(const T &value);
 };
 
 
