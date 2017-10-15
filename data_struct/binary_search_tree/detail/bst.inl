@@ -59,6 +59,8 @@ void BST<T>::recursive_remove(const T &value, BST_Node<T> *&node)
         BST_Node<T> *old_node = node;
         node = (node->left) ? node->left : node->right;
         delete old_node;
+
+        n_ele--;
     }
 }
 
