@@ -11,26 +11,26 @@
 /* Class : BST
  * Binary Tree implamentation. Nodes are based on the BST_Node<T> struct.
  */
-template <typename T>
+template <typename Key, typename T>
 class BST
 {
     private:
-        BST_Node<T> *root;
+        BST_Node<Key, T> *root;
         std::size_t n_ele;
 
-        void delete_tree(BST_Node<T> *node);
-        void recursive_inorder_print(const BST_Node<T> *node) const;
-        void recursive_remove(const T &value, BST_Node<T> *&node);
-        BST_Node<T>* min_node(BST_Node<T> *node) const;
+        void delete_tree(BST_Node<Key, T> *node);
+        void recursive_inorder_print(const BST_Node<Key, T> *node) const;
+        void recursive_remove(const Key &key, BST_Node<Key, T> *&node);
+        BST_Node<Key, T>* min_node(BST_Node<Key, T> *node) const;
     public:
         BST();
         ~BST();
-        void insert(const T &value);
-        void remove(const T &value);
+        void insert(const Key &key, const T &value);
+        void remove(const Key &key);
         std::size_t size() const;
         T max() const;
         T min() const;
-        bool contains(const T &value) const;
+        bool contains(const Key &key) const;
         bool isEmpty() const;
         void inorder_print() const;
 };

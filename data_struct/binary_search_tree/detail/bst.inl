@@ -8,8 +8,8 @@
 /* delete_tree()
  * Deletes nodes in the BST recursively.
  */
-template <typename T>
-void BST<T>::delete_tree(BST_Node<T> *node)
+template <typename Key, typename T>
+void BST<Key, T>::delete_tree(BST_Node<Key, T> *node)
 {
     if (node->right)
         delete_tree(node->right);
@@ -23,13 +23,13 @@ void BST<T>::delete_tree(BST_Node<T> *node)
 /* recursive_inorder_print()
  * Recursively prints values in sorted order.
  */
-template <typename T>
-void BST<T>::recursive_inorder_print(const BST_Node<T> *node) const
+template <typename Key, typename T>
+void BST<Key, T>::recursive_inorder_print(const BST_Node<Key, T> *node) const
 {
     if (node->left)
         recursive_inorder_print(node->left);
 
-    std::cout << node->data << ' ';
+    std::cout << node->key << ' ';
 
     if (node->right)
         recursive_inorder_print(node->right);
@@ -39,24 +39,24 @@ void BST<T>::recursive_inorder_print(const BST_Node<T> *node) const
 /* recursive_remove()
  * Recursively removes value form a tree.
  */
-template <typename T>
-void BST<T>::recursive_remove(const T &value, BST_Node<T> *&node)
+template <typename Key, typename T>
+void BST<Key, T>::recursive_remove(const Key &key, BST_Node<Key, T> *&node)
 {
     if (!node) {
-        std::cout << value << " is not in the tree. Nothing is removed.\n";
+        std::cout << key << " is not in the tree. Nothing is removed.\n";
         return;
     }
 
-    if (value < node->data) {
-        recursive_remove(value, node->left);
-    } else if (value > node->data) {
-        recursive_remove(value, node->right);
+    if (key < node->key) {
+        recursive_remove(key, node->left);
+    } else if (key > node->key) {
+        recursive_remove(key, node->right);
     } else if (node->left && node->right) {
         // Case for 2 children
-        node->data = min_node(node->right)->data;
-        recursive_remove(node->data, node->right);
+        node->key = min_node(node->right)->key;
+        recursive_remove(node->key, node->right);
     } else {
-        BST_Node<T> *old_node = node;
+        BST_Node<Key, T> *old_node = node;
         node = (node->left) ? node->left : node->right;
         delete old_node;
 
@@ -68,8 +68,8 @@ void BST<T>::recursive_remove(const T &value, BST_Node<T> *&node)
 /* min_node()
  * Takes in a node as root and finds the min node of the subtree.
  */
-template <typename T>
-BST_Node<T>* BST<T>::min_node(BST_Node<T> *node) const
+template <typename Key, typename T>
+BST_Node<Key, T>* BST<Key, T>::min_node(BST_Node<Key, T> *node) const
 {
     if (!node) {
         return nullptr;
@@ -87,8 +87,8 @@ BST_Node<T>* BST<T>::min_node(BST_Node<T> *node) const
 
 /* Default Constructor
  */
-template <typename T>
-BST<T>::BST()
+template <typename Key, typename T>
+BST<Key, T>::BST()
 {
     root = nullptr;
     n_ele = 0;
@@ -97,8 +97,8 @@ BST<T>::BST()
 
 /* Destructor
  */
-template <typename T>
-BST<T>::~BST()
+template <typename Key, typename T>
+BST<Key, T>::~BST()
 {
     if (root)
         delete_tree(root);
@@ -110,35 +110,35 @@ BST<T>::~BST()
  * tree until a node to insert the value is found. If the value is already inside the tree,
  * a message is printed out and the value is not inserted into the tree.
  */
-template <typename T>
-void BST<T>::insert(const T &value)
+template <typename Key, typename T>
+void BST<Key, T>::insert(const Key &key, const T &value)
 {
     if (!root) {
-        root = new BST_Node<T>(value, nullptr, nullptr);
+        root = new BST_Node<Key, T>(key, value, nullptr, nullptr);
         n_ele++;
     } else {
         // Use a curr node ptr for exiting while loop. prev ptr will be accessed when allocating
         // new node
-        BST_Node<T> *prev, *curr = root;
+        BST_Node<Key, T> *prev, *curr = root;
 
         while (curr) {
             prev = curr;
 
-            if (value < curr->data) {
+            if (key < curr->key) {
                 curr = curr->left;
-            } else if (value > curr->data) {
+            } else if (key > curr->key) {
                 curr = curr->right;
             } else {
-                std::cout << value << " is already in tree.\n";
+                std::cout << key << " is already in tree.\n";
                 return;
             }
         }
 
         // Allocate new node
-        if (value < prev->data)
-            prev->left = new BST_Node<T>(value, nullptr, nullptr);
+        if (key < prev->key)
+            prev->left = new BST_Node<Key, T>(key, value, nullptr, nullptr);
         else
-            prev->right = new BST_Node<T>(value, nullptr, nullptr);
+            prev->right = new BST_Node<Key, T>(key, value, nullptr, nullptr);
 
         n_ele++;
     }
@@ -147,18 +147,18 @@ void BST<T>::insert(const T &value)
 
 /* remove()
  */
-template <typename T>
-void BST<T>::remove(const T &value)
+template <typename Key, typename T>
+void BST<Key, T>::remove(const Key &key)
 {
-    recursive_remove(value, root);
+    recursive_remove(key, root);
 }
 
 
 /* size()
  * Returns the number of allocated elements in the tree.
  */
-template <typename T>
-std::size_t BST<T>::size() const
+template <typename Key, typename T>
+std::size_t BST<Key, T>::size() const
 {
     return n_ele;
 }
@@ -167,54 +167,54 @@ std::size_t BST<T>::size() const
 /* max()
  * Transverses the tree to the max value.
  */
-template <typename T>
-T BST<T>::max() const
+template <typename Key, typename T>
+T BST<Key, T>::max() const
 {
     // TODO: Add in handeling for when root is not allocated.
     // Consider returing iterator to node rather than value itself.
-    BST_Node<T> *node = root;
+    BST_Node<Key, T> *node = root;
 
     while (node->right)
         node = node->right;
 
-    return node->data;
+    return node->key;
 }
 
 
 /* min()
  * Transverses the tree to the min value.
  */
-template <typename T>
-T BST<T>::min() const
+template <typename Key, typename T>
+T BST<Key, T>::min() const
 {
     // TODO: Add in handeling for when root is not allocated.
     // Consider returing iterator to node rather than value itself.
-    BST_Node<T> *node = root;
+    BST_Node<Key, T> *node = root;
 
     while (node->left)
         node = node->left;
 
-    return node->data;
+    return node->key;
 }
 
 
 /* contains()
  * Checks if a specific key is inside the tree.
  */
-template <typename T>
-bool BST<T>::contains(const T &value) const
+template <typename Key, typename T>
+bool BST<Key, T>::contains(const Key &key) const
 {
     if (!root) {
         return false;
     } else {
-        BST_Node<T> *curr = root;
+        BST_Node<Key, T> *curr = root;
 
         while (curr) {
             // If the value is neither less than or greater than the value in the current node,
             // than the value must be the same as the current node.
-            if (value < curr->data)
+            if (key < curr->key)
                 curr = curr->left;
-            else if (value > curr->data)
+            else if (key > curr->key)
                 curr = curr->right;
             else
                 return true;
@@ -228,8 +228,8 @@ bool BST<T>::contains(const T &value) const
 /* isEmpty()
  * Checks if the tree is empty.
  */
-template <typename T>
-bool BST<T>::isEmpty() const
+template <typename Key, typename T>
+bool BST<Key, T>::isEmpty() const
 {
     if (!root)
         return true;
@@ -241,8 +241,8 @@ bool BST<T>::isEmpty() const
 /* inorder_print()
  * Prints data in sorted order.
  */
-template <typename T>
-void BST<T>::inorder_print() const
+template <typename Key, typename T>
+void BST<Key, T>::inorder_print() const
 {
     recursive_inorder_print(root);
     std::cout << std::endl;

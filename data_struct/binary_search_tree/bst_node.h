@@ -8,15 +8,16 @@
 /* struct: BST_Node
  * Struct containing a BST Node. Contains the node and pointers to the left and right child.
  */
-template <typename T>
+template <typename Key, typename T>
 struct BST_Node
 {
+    Key key;
     T data;
-    BST_Node<T> *left, *right;
+    BST_Node<Key, T> *left, *right;
 
     BST_Node();
-    BST_Node(const T &item, BST_Node<T> *l, BST_Node<T> *r);
-    BST_Node(T &&item, BST_Node<T> *l, BST_Node<T> *r);
+    BST_Node(const Key &k, const T &d, BST_Node<Key, T> *l, BST_Node<Key, T> *r);
+    BST_Node(Key &&k, T &&d, BST_Node<Key, T> *l, BST_Node<Key, T> *r);
 };
 
 
