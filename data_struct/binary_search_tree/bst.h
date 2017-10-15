@@ -20,10 +20,13 @@ class BST
 
         void delete_tree(BST_Node<T> *node);
         void recursive_inorder_print(const BST_Node<T> *node) const;
+        void recursive_remove(const T &value, BST_Node<T> *&node);
+        BST_Node<T>* min_node(BST_Node<T> *node) const;
     public:
         BST();
         ~BST();
         void insert(const T &value);
+        void remove(const T &value);
         std::size_t size() const;
         T max() const;
         T min() const;

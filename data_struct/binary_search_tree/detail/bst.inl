@@ -36,6 +36,49 @@ void BST<T>::recursive_inorder_print(const BST_Node<T> *node) const
 }
 
 
+/* recursive_remove()
+ * Recursively removes value form a tree.
+ */
+template <typename T>
+void BST<T>::recursive_remove(const T &value, BST_Node<T> *&node)
+{
+    if (!node) {
+        std::cout << value << " is not in the tree. Nothing is removed.\n";
+        return;
+    }
+
+    if (value < node->data) {
+        recursive_remove(value, node->left);
+    } else if (value > node->data) {
+        recursive_remove(value, node->right);
+    } else if (node->left && node->right) {
+        // Case for 2 children
+        node->data = min_node(node->right)->data;
+        recursive_remove(node->data, node->right);
+    } else {
+        BST_Node<T> *old_node = node;
+        node = (node->left) ? node->left : node->right;
+        delete old_node;
+    }
+}
+
+
+/* min_node()
+ * Takes in a node as root and finds the min node of the subtree.
+ */
+template <typename T>
+BST_Node<T>* BST<T>::min_node(BST_Node<T> *node) const
+{
+    if (!node) {
+        return nullptr;
+    } else {
+        while (node->left)
+            node = node->left;
+        return node;
+    }
+}
+
+
 /*-------------------------------------------------------------------------------------------------
  * PUBLIC METHODS
  *-----------------------------------------------------------------------------------------------*/
@@ -97,6 +140,15 @@ void BST<T>::insert(const T &value)
 
         n_ele++;
     }
+}
+
+
+/* remove()
+ */
+template <typename T>
+void BST<T>::remove(const T &value)
+{
+    recursive_remove(value, root);
 }
 
 
