@@ -28,6 +28,7 @@ class BST
         T max() const;
         T min() const;
         bool contains(const T &value) const;
+        bool isEmpty() const;
         void inorder_print() const;
 };
 

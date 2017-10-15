@@ -171,6 +171,19 @@ bool BST<T>::contains(const T &value) const
 }
 
 
+/* isEmpty()
+ * Checks if the tree is empty.
+ */
+template <typename T>
+bool BST<T>::isEmpty() const
+{
+    if (!root)
+        return true;
+    else
+        return false;
+}
+
+
 /* inorder_print()
  * Prints data in sorted order.
  */
