@@ -168,7 +168,7 @@ std::size_t BST<Key, T>::size() const
  * Transverses the tree to the max value.
  */
 template <typename Key, typename T>
-T BST<Key, T>::max() const
+Key BST<Key, T>::max_key() const
 {
     // TODO: Add in handeling for when root is not allocated.
     // Consider returing iterator to node rather than value itself.
@@ -185,7 +185,7 @@ T BST<Key, T>::max() const
  * Transverses the tree to the min value.
  */
 template <typename Key, typename T>
-T BST<Key, T>::min() const
+Key BST<Key, T>::min_key() const
 {
     // TODO: Add in handeling for when root is not allocated.
     // Consider returing iterator to node rather than value itself.

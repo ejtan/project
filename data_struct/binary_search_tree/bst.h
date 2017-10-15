@@ -28,8 +28,8 @@ class BST
         void insert(const Key &key, const T &value);
         void remove(const Key &key);
         std::size_t size() const;
-        T max() const;
-        T min() const;
+        Key max_key() const;
+        Key min_key() const;
         bool contains(const Key &key) const;
         bool isEmpty() const;
         void inorder_print() const;
