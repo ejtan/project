@@ -1,3 +1,6 @@
+#include <algorithm>
+
+
 /* Default constructor
  */
 template <typename T, size_t N>
@@ -28,12 +31,12 @@ void List_Node<T, N>::push_back(const T &item)
 template <typename T, size_t N>
 void List_Node<T, N>::push_front(const T &item)
 {
-    for (int i = size - 1; i >= 0; i--)
-        data[i + 1] = data[i];
+    data[size++] = item;
 
-    data[0] = item;
-    size++;
+    // Rotate elements so that the inserted element is now rotated to position 0
+    std::rotate(data.begin(), data.begin() + size - 1, data.begin() + size);
 }
+
 
 
 /* insert(item)
@@ -46,9 +49,8 @@ void List_Node<T, N>::push_front(const T &item)
 template <typename T, size_t N>
 void List_Node<T, N>::insert(size_t pos, const T &item)
 {
-    for (int i = size - 1; i >= pos; i--)
-        data[i + 1] = data[i];
+    data[size++] = item;
 
-    data[pos] = item;
-    size++;
+    // Rotate elements between [pos, size) so that the last element is at position pos.
+    std::rotate(data.begin() + pos, data.begin() + size - 1, data.begin() + size);
 }
