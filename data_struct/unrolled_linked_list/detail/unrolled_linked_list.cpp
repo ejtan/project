@@ -86,6 +86,62 @@ size_t Unrolled_List<T, NodeSize>::size() const noexcept
 }
 
 
+/* back()
+ *
+ * @return : Returns a reference to the last item in the list.
+ */
+template <typename T, size_t NodeSize>
+T& Unrolled_List<T, NodeSize>::back()
+{
+    if (N == 0)
+        throw std::out_of_range("Error: Accessing element in empty list.");
+
+    return tail->data[tail->size - 1];
+}
+
+
+/* back()
+ *
+ * @return : const reference to the last item of the list.
+ */
+template <typename T, size_t NodeSize>
+const T& Unrolled_List<T, NodeSize>::back() const
+{
+    if (N == 0)
+        throw std::out_of_range("Error: Accessing element in empty list.");
+
+    return tail->data[tail->size - 1];
+}
+
+
+/* front()
+ *
+ * @return : reference to the first item in the list.
+ */
+template <typename T, size_t NodeSize>
+T& Unrolled_List<T, NodeSize>::front()
+{
+    if (N == 0)
+        throw std::out_of_range("Error: Accessing element in empty list.");
+
+    return head->data[0];
+}
+
+
+/* front()
+ *
+ * @return : reference to the first item in the list.
+ */
+template <typename T, size_t NodeSize>
+const T& Unrolled_List<T, NodeSize>::front() const
+{
+    if (N == 0)
+        throw std::out_of_range("Error: Accessing element in empty list.");
+
+    return head->data[0];
+}
+
+
 /* clear()
  *
  * Clears the linked list. Deletes nodes except for head and sets tail to the head.

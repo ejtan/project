@@ -41,6 +41,12 @@ class Unrolled_List
         bool empty() const noexcept;
         size_t size() const noexcept;
 
+        // Access
+        T& back();
+        const T& back() const;
+        T& front();
+        const T& front() const;
+
         // Modifiers
         void clear() noexcept;
         void insert(size_t pos, const T &item);
