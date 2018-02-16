@@ -51,6 +51,6 @@ void List_Node<T, N>::insert(size_t pos, const T &item)
 {
     data[size++] = item;
 
-    // Rotate elements between [pos, size) so that the last element is at position pos.
+    // Rotate data[pos, size) such that data[size-1] is now at data[pos]
     std::rotate(data.begin() + pos, data.begin() + size - 1, data.begin() + size);
 }

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <stdexcept>
 
 
 /*------------------------------------------------------------------------------------------------
@@ -67,25 +68,25 @@ Unrolled_List<T, NodeSize>::~Unrolled_List()
  * @param : pos = position to insert the item.
  * @param : item = item to insert
  *
- * Inserts the item into list[pos] and perform the necessary data movement and allocation of
- * nodes if needed.
+ * Inserts the item in list[pos]. Elements from list[pos] to the end of the list are moved back.
+ * perform the necessary data movement and allocation of nodes if needed.
  */
 template <typename T, size_t NodeSize>
 void Unrolled_List<T, NodeSize>::insert(size_t pos, const T &item)
 {
+    if (pos > N)
+        throw std::out_of_range("Error: Attempting to insert an element out range.");
+
     List_Node<T, NodeSize> *ptr = head;
-    int skip = 0;
+    size_t ele_skip = 0;
 
-    while (skip <= (static_cast<int>(pos) - static_cast<int>(ptr->size))) {
-        skip += static_cast<int>(ptr->size);
+    // Loop to skip elements until the correct node is reached.
+    while (ele_skip + ptr->size < pos) {
+        ele_skip += ptr->size;
         ptr = ptr->next;
-    } // Skip to the correct node.
+    }
 
-    // If skip is the same as pos, we are at the front of the array in the node
-    if (skip == pos)
-        ptr->push_front(item);
-    else
-        ptr->insert(pos - static_cast<size_t>(skip), item);
+    ptr->insert(pos - ele_skip, item);
 
     if (ptr->size == NodeSize)
         split_node(ptr);
@@ -144,8 +145,11 @@ template <typename T, size_t NodeSize>
 std::ostream& operator<<(std::ostream &os, const Unrolled_List<T, NodeSize> &rhs)
 {
     for (List_Node<T, NodeSize> *ptr = rhs.head; ptr; ptr = ptr->next)
+    {
         for (int i = 0; i < ptr->size; i++)
             os << ptr->data[i] << '\n';
+        std::cout << "----\n";
+    }
 
     return os;
 }
