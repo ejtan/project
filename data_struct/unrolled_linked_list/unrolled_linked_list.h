@@ -2,6 +2,7 @@
 
 
 #include <iostream>
+#include <initializer_list>
 #include "list_node.h"
 
 
@@ -42,8 +43,11 @@ class Unrolled_List
 
         // Modifiers
         void insert(size_t pos, const T &item);
+        void insert(size_t pos, T &&item);
         void push_back(const T &item);
+        void push_back(T &&item);
         void push_front(const T &item);
+        void push_front(T &&item);
 
         // Overloaded operators
         friend std::ostream& operator<< <T, NodeSize>(std::ostream &os, const Unrolled_List &rhs);

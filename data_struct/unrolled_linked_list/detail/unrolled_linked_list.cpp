@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <stdexcept>
+#include <utility>
 
 
 /*------------------------------------------------------------------------------------------------
@@ -117,6 +118,39 @@ void Unrolled_List<T, NodeSize>::insert(size_t pos, const T &item)
 }
 
 
+/* insert(pos, item)
+ *
+ * @param : pos = position to insert the item.
+ * @param : item = Rvalue reference of item to insert
+ *
+ * Inserts the item in list[pos]. Elements from list[pos] to the end of the list are moved back.
+ * perform the necessary data movement and allocation of nodes if needed.
+ */
+template <typename T, size_t NodeSize>
+void Unrolled_List<T, NodeSize>::insert(size_t pos, T &&item)
+{
+    if (pos > N)
+        throw std::out_of_range("Error: Attempting to insert an element out range.");
+
+    List_Node<T, NodeSize> *ptr = head;
+    size_t ele_skip = 0;
+
+    // Loop to skip elements until the correct node is reached.
+    while (ele_skip + ptr->size < pos) {
+        ele_skip += ptr->size;
+        ptr = ptr->next;
+    }
+
+    ptr->insert(pos - ele_skip, std::move(item));
+
+    if (ptr->size == NodeSize)
+        split_node(ptr);
+
+    N++;
+}
+
+
+
 /* push_back(item)
  *
  * @ param : item = Object to insert at the end of the list.
@@ -136,6 +170,25 @@ void Unrolled_List<T, NodeSize>::push_back(const T &item)
 }
 
 
+/* push_back(item)
+ *
+ * @ param : item = Rvalue ref of Object to insert at the end of the list.
+ *
+ *  Adds an item to the end of the data array in the tail node. If the node is at capacity,
+ *  we split the data array in half and set a new tail node.
+ */
+template <typename T, size_t NodeSize>
+void Unrolled_List<T, NodeSize>::push_back(T &&item)
+{
+    tail->push_back(std::move(item));
+
+    if (tail->size == NodeSize)
+        split_node(tail);
+
+    N++;
+}
+
+
 /* push_front(item)
  *
  * @param : item = object to insert at the front of the list.
@@ -147,6 +200,25 @@ template <typename T, size_t NodeSize>
 void Unrolled_List<T, NodeSize>::push_front(const T &item)
 {
     head->push_front(item);
+
+    if (head->size == NodeSize)
+        split_node(head);
+
+    N++;
+}
+
+
+/* push_front(item)
+ *
+ * @param : item = Rvalue ref of object to insert at the front of the list.
+ *
+ * Shifts all data in a node back and inserts item to the front. If the node is full, we allocate
+ * a new node, split the data in half, and place the node between head and head->next.
+ */
+template <typename T, size_t NodeSize>
+void Unrolled_List<T, NodeSize>::push_front(T &&item)
+{
+    head->push_front(std::move(item));
 
     if (head->size == NodeSize)
         split_node(head);
