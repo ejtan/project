@@ -15,6 +15,9 @@ int main(void)
 {
     Unrolled_List<int, 3> lst;
 
+    if (lst.empty())
+        std::cout << "List is currently empty\n";
+
     test_insert(lst);
 }
 
@@ -50,4 +53,6 @@ void test_insert(Unrolled_List<int, 3> &lst)
 
     std::cout << "Output of inserts:\n";
     std::cout << lst << std::endl;
+    if (!lst.empty())
+        std::cout << "List size: " << lst.size() << std::endl;
 }

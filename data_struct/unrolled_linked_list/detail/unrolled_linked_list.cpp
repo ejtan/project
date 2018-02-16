@@ -63,6 +63,28 @@ Unrolled_List<T, NodeSize>::~Unrolled_List()
 }
 
 
+/* empty()
+ *
+ * @return : Returns true if empty list (N == 0) and false otherwise.
+ */
+template <typename T, size_t NodeSize>
+bool Unrolled_List<T, NodeSize>::empty() const noexcept
+{
+    return N == 0 ? true : false;
+}
+
+
+/* size()
+ *
+ * @return : size of the list
+ */
+template <typename T, size_t NodeSize>
+size_t Unrolled_List<T, NodeSize>::size() const noexcept
+{
+    return N;
+}
+
+
 /* insert(pos, item)
  *
  * @param : pos = position to insert the item.
@@ -145,11 +167,8 @@ template <typename T, size_t NodeSize>
 std::ostream& operator<<(std::ostream &os, const Unrolled_List<T, NodeSize> &rhs)
 {
     for (List_Node<T, NodeSize> *ptr = rhs.head; ptr; ptr = ptr->next)
-    {
         for (int i = 0; i < ptr->size; i++)
             os << ptr->data[i] << '\n';
-        std::cout << "----\n";
-    }
 
     return os;
 }

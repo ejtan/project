@@ -36,6 +36,10 @@ class Unrolled_List
         Unrolled_List();
         ~Unrolled_List();
 
+        // Capacity
+        bool empty() const noexcept;
+        size_t size() const noexcept;
+
         // Modifiers
         void insert(size_t pos, const T &item);
         void push_back(const T &item);
