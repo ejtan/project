@@ -42,6 +42,7 @@ class Unrolled_List
         size_t size() const noexcept;
 
         // Modifiers
+        void clear() noexcept;
         void insert(size_t pos, const T &item);
         void insert(size_t pos, T &&item);
         void push_back(const T &item);

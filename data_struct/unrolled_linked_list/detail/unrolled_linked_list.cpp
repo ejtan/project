@@ -86,6 +86,34 @@ size_t Unrolled_List<T, NodeSize>::size() const noexcept
 }
 
 
+/* clear()
+ *
+ * Clears the linked list. Deletes nodes except for head and sets tail to the head.
+ * Resets the size of the node and list.
+ */
+template <typename T, size_t NodeSize>
+void Unrolled_List<T, NodeSize>::clear() noexcept
+{
+    if (head->next) {
+        List_Node<T, NodeSize> *curr, *ptr = head->next;
+
+        // Delete all nodes except head
+        while (ptr) {
+            curr = ptr;
+            ptr = ptr->next;
+            delete curr;
+        }
+
+        // Only head exists, so set head to tail
+        tail = head;
+    }
+
+    head->size = 0;
+    tail = head;
+    N = 0;
+}
+
+
 /* insert(pos, item)
  *
  * @param : pos = position to insert the item.
