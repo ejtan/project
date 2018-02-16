@@ -52,6 +52,91 @@ Unrolled_List<T, NodeSize>::Unrolled_List() : N(0)
 }
 
 
+/* Constructor with two iterators
+ *
+ * @param : begin = starting input iterator
+ * @param : end = ending input iterator
+ *
+ * Copies elements from [begin, end) to the list. Uses push_back to insert items (which means
+ * N is initialized to 0 since push_back() incaments N as items insert).
+ */
+template <typename T, size_t NodeSize>
+template <class InputIt>
+Unrolled_List<T, NodeSize>::Unrolled_List(InputIt begin, InputIt end) : N(0)
+{
+    head = new List_Node<T, NodeSize>;
+    tail = head;
+
+    // Use an interator loop to insert elements into the list.
+    for (auto it = begin; it != end; it++)
+        push_back(*it);
+}
+
+
+/* Constructor with size
+ *
+ * @param : cnt = number of elements to reserve.
+ *
+ * Reserves cnt elements by initalizing nodes. Nodes will be initialized to size NodeSize / 2.
+ * This allows for more random inserts without having to call split_node(), but will
+ * incure more memory usage.
+ */
+template <typename T, size_t NodeSize>
+Unrolled_List<T, NodeSize>::Unrolled_List(size_t cnt) : N(cnt)
+{
+    size_t half = NodeSize / 2;
+    size_t n_nodes = cnt / half;
+
+    // Set head node
+    head = new List_Node<T, NodeSize>;
+
+    if (!n_nodes) {
+        // If cnt < half, set only 1 node
+        head->size = cnt;
+        tail = head;
+    } else {
+        List_Node<T, NodeSize> *ptr = head;
+
+        // Set the first one
+        ptr->size = half;
+
+        // Set Nodes (first one is already filled)
+        for (size_t i = 1; i < n_nodes; i++) {
+            ptr->next =  new List_Node<T, NodeSize>;
+            ptr = ptr->next;
+            ptr->size = half;
+        }
+
+        // Allocate one last node if cnt % half != 0
+        if (cnt % half) {
+            ptr->next = new List_Node<T, NodeSize>;
+            ptr = ptr->next;
+            ptr->size = cnt % half;
+        }
+
+        tail = ptr;
+    }
+}
+
+
+/* Initalizer list constructor
+ *
+ * @param : lst = Initalizer list input
+ *
+ * Allocates a node and performs push back operations on each element of the initializer list.
+ * We use push_back(), so we must initialize N to 0.
+ */
+template <typename T, size_t NodeSize>
+Unrolled_List<T, NodeSize>::Unrolled_List(std::initializer_list<T> lst) : N(0)
+{
+    head = new List_Node<T, NodeSize>;
+    tail = head;
+
+    // Use push back over all the elements in the initalizer list.
+    for (const auto &ele : lst)
+        push_back(ele);
+}
+
 /* Destructor
  */
 template <typename T, size_t NodeSize>
