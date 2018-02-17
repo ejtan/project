@@ -137,6 +137,27 @@ Unrolled_List<T, NodeSize>::Unrolled_List(std::initializer_list<T> lst) : N(0)
         push_back(ele);
 }
 
+
+/* Copy constructor
+ *
+ * @param : rhs = lvalue ref to input Unrolled_List
+ */
+template <typename T, size_t NodeSize>
+Unrolled_List<T, NodeSize>::Unrolled_List(const Unrolled_List &rhs) : N(rhs.N)
+{
+    List_Node<T, NodeSize> *ptr = head;
+
+    for (List_Node<T, NodeSize> *rhs_ptr = rhs.head; rhs_ptr; rhs_ptr = rhs_ptr->next) {
+        std::cout << "asdf\n";
+        ptr = new List_Node<T, NodeSize>;
+        ptr->data = rhs_ptr->data;
+        ptr->size = rhs_ptr->size;
+        ptr = ptr->next;
+    }
+    //tail = ptr;
+}
+
+
 /* Destructor
  */
 template <typename T, size_t NodeSize>
@@ -408,8 +429,11 @@ template <typename T, size_t NodeSize>
 std::ostream& operator<<(std::ostream &os, const Unrolled_List<T, NodeSize> &rhs)
 {
     for (List_Node<T, NodeSize> *ptr = rhs.head; ptr; ptr = ptr->next)
+    {
         for (int i = 0; i < ptr->size; i++)
             os << ptr->data[i] << '\n';
+        std::cout << "---------" << std::endl;
+    }
 
     return os;
 }

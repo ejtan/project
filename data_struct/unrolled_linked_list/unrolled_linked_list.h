@@ -35,6 +35,15 @@ class Unrolled_List
     public: // Methods
         // Constructors and destructors.
         Unrolled_List();
+        template <class InputIt> Unrolled_List(InputIt begin, InputIt end);
+        Unrolled_List(size_t cnt);
+        Unrolled_List(std::initializer_list<T> lst);
+        Unrolled_List(const Unrolled_List &rhs);
+
+        /* TODO Implament rvalue reference copy 
+         Unrolled_List(Unrolled_List &&rhs);
+         */
+
         ~Unrolled_List();
 
         // Capacity
