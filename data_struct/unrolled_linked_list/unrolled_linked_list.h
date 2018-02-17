@@ -62,6 +62,8 @@ class Unrolled_List
         void push_front(T &&item);
 
         // Overloaded operators
+        Unrolled_List& operator=(const Unrolled_List &rhs);
+        Unrolled_List& operator=(Unrolled_List &&rhs);
         friend std::ostream& operator<< <T, NodeSize>(std::ostream &os, const Unrolled_List &rhs);
 };
 

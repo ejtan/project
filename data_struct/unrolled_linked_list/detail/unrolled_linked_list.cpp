@@ -452,6 +452,90 @@ void Unrolled_List<T, NodeSize>::push_front(T &&item)
 }
 
 
+/* overloaded = operator
+ *
+ * @param : rhs = lvalue ref to Unrolled_List
+ *
+ * @return : *this
+ *
+ * Performs a deep copy by overwriting elements in the list. If there are allocated list nodes,
+ * we overwrite the nodes. If extra nodes exists, we delete them.
+ */
+template <typename T, int NodeSize>
+Unrolled_List<T, NodeSize>& Unrolled_List<T, NodeSize>::operator=(const Unrolled_List &rhs)
+{
+    List_Node<T, NodeSize> *new_node, *curr = head, *rptr = rhs.head;
+
+    // Set data in current list with rhs
+    do {
+        curr->data = rptr->data;
+        curr->size = rptr->size;
+
+        // Allocated new nodes if needed
+        if (rptr->next && !curr->next) {
+            new_node = new List_Node<T, NodeSize>;
+            new_node->prev = curr;
+            curr->next = new_node;
+        }
+
+        rptr = rptr->next;
+
+        // Needed or tail would be 1 node ahead of the last one
+        if (rptr)
+            curr = curr->next;
+    } while (rptr);
+
+    tail = curr;
+
+    // If extra nodes exists, delete them
+    if (tail->next) {
+        List_Node<T, NodeSize> *del_ptr = tail->next;
+
+        for (List_Node<T, NodeSize> *ptr = del_ptr; ptr; ptr = del_ptr) {
+            del_ptr = ptr->next;
+            delete ptr;
+        }
+        tail->next = nullptr;
+    }
+
+    N = rhs.N;
+
+    return *this;
+}
+
+
+/* overloaded = operator
+ *
+ * @param : rhs = rvalue ref to input list
+ *
+ * @return : *this
+ *
+ * Performs a shallow copy. rhs is reset to a single allocated node with N = 0.
+ */
+template <typename T, int NodeSize>
+Unrolled_List<T, NodeSize>& Unrolled_List<T, NodeSize>::operator=(Unrolled_List &&rhs)
+{
+    List_Node<T, NodeSize> *del_ptr = head->next;
+
+    // Erase current list
+    for (List_Node<T, NodeSize> *ptr = del_ptr; ptr; ptr = del_ptr) {
+        del_ptr = ptr->next;
+        delete ptr;
+    }
+
+    head = tail;
+    head->size = 0;
+
+    // Swap empty list with rhs
+    std::swap(head, rhs.head);
+    std::swap(tail, rhs.tail);
+    N = rhs.N;
+    rhs.N = 0;
+
+    return *this;
+}
+
+
 /* overloaded << operator
  *
  * @param : os = output stream
