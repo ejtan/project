@@ -141,20 +141,55 @@ Unrolled_List<T, NodeSize>::Unrolled_List(std::initializer_list<T> lst) : N(0)
 /* Copy constructor
  *
  * @param : rhs = lvalue ref to input Unrolled_List
+ *
+ * Performs a copy of rhs, maintaining the size of the nodes.
  */
 template <typename T, size_t NodeSize>
 Unrolled_List<T, NodeSize>::Unrolled_List(const Unrolled_List &rhs) : N(rhs.N)
 {
-    List_Node<T, NodeSize> *ptr = head;
+    head = new List_Node<T, NodeSize>;
 
-    for (List_Node<T, NodeSize> *rhs_ptr = rhs.head; rhs_ptr; rhs_ptr = rhs_ptr->next) {
-        std::cout << "asdf\n";
-        ptr = new List_Node<T, NodeSize>;
-        ptr->data = rhs_ptr->data;
-        ptr->size = rhs_ptr->size;
-        ptr = ptr->next;
+    List_Node<T, NodeSize> *prev, *curr = head;
+
+    for (List_Node<T, NodeSize> *rptr = rhs.head; rptr; rptr = rptr->next) {
+        // Copy data
+        curr->data = rptr->data;
+        curr->size = rptr->size;
+
+        // Set link (if ptr != head)
+        if (curr != head)
+            curr->prev = prev;
+
+        // Set next node if rptr->next exists
+        if (rptr->next) {
+            curr->next = new List_Node<T, NodeSize>;
+            prev = curr;
+            curr = curr->next;
+        }
     }
-    //tail = ptr;
+
+    tail = curr;
+}
+
+
+/* Move constructor
+ *
+ * @param : rhs = rvalue ref to Unrolled_List
+ *
+ * Performs a shallow copy by swaping newly constructed nodes with rhs.
+ */
+template <typename T, size_t NodeSize>
+Unrolled_List<T, NodeSize>::Unrolled_List(Unrolled_List &&rhs) : N(rhs.N)
+{
+    head = new List_Node<T, NodeSize>;
+    tail = head;
+
+    // Swap head and tail pointers
+    std::swap(head, rhs.head);
+    std::swap(tail, rhs.tail);
+
+    // Reset rhs list size
+    rhs.N = 0;
 }
 
 
@@ -429,11 +464,8 @@ template <typename T, size_t NodeSize>
 std::ostream& operator<<(std::ostream &os, const Unrolled_List<T, NodeSize> &rhs)
 {
     for (List_Node<T, NodeSize> *ptr = rhs.head; ptr; ptr = ptr->next)
-    {
         for (int i = 0; i < ptr->size; i++)
             os << ptr->data[i] << '\n';
-        std::cout << "---------" << std::endl;
-    }
 
     return os;
 }
