@@ -14,7 +14,7 @@
  * Within public methods, once the array is filled, a new node is allocated and the data is
  * split between the two.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 void Unrolled_List<T, NodeSize>::split_node(List_Node<T, NodeSize> *ptr)
 {
     List_Node<T, NodeSize> *new_node = new List_Node<T, NodeSize>;
@@ -44,7 +44,7 @@ void Unrolled_List<T, NodeSize>::split_node(List_Node<T, NodeSize> *ptr)
 
 /* Default Constructor
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 Unrolled_List<T, NodeSize>::Unrolled_List() : N(0)
 {
     head = new List_Node<T, NodeSize>;
@@ -60,7 +60,7 @@ Unrolled_List<T, NodeSize>::Unrolled_List() : N(0)
  * Copies elements from [begin, end) to the list. Uses push_back to insert items (which means
  * N is initialized to 0 since push_back() incaments N as items insert).
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 template <class InputIt>
 Unrolled_List<T, NodeSize>::Unrolled_List(InputIt begin, InputIt end) : N(0)
 {
@@ -81,11 +81,11 @@ Unrolled_List<T, NodeSize>::Unrolled_List(InputIt begin, InputIt end) : N(0)
  * This allows for more random inserts without having to call split_node(), but will
  * incure more memory usage.
  */
-template <typename T, size_t NodeSize>
-Unrolled_List<T, NodeSize>::Unrolled_List(size_t cnt) : N(cnt)
+template <typename T, int NodeSize>
+Unrolled_List<T, NodeSize>::Unrolled_List(int cnt) : N(cnt)
 {
-    size_t half = NodeSize / 2;
-    size_t n_nodes = cnt / half;
+    int half = NodeSize / 2;
+    int n_nodes = cnt / half;
 
     // Set head node
     head = new List_Node<T, NodeSize>;
@@ -101,7 +101,7 @@ Unrolled_List<T, NodeSize>::Unrolled_List(size_t cnt) : N(cnt)
         ptr->size = half;
 
         // Set Nodes (first one is already filled)
-        for (size_t i = 1; i < n_nodes; i++) {
+        for (int i = 1; i < n_nodes; i++) {
             ptr->next =  new List_Node<T, NodeSize>;
             ptr = ptr->next;
             ptr->size = half;
@@ -126,7 +126,7 @@ Unrolled_List<T, NodeSize>::Unrolled_List(size_t cnt) : N(cnt)
  * Allocates a node and performs push back operations on each element of the initializer list.
  * We use push_back(), so we must initialize N to 0.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 Unrolled_List<T, NodeSize>::Unrolled_List(std::initializer_list<T> lst) : N(0)
 {
     head = new List_Node<T, NodeSize>;
@@ -144,7 +144,7 @@ Unrolled_List<T, NodeSize>::Unrolled_List(std::initializer_list<T> lst) : N(0)
  *
  * Performs a copy of rhs, maintaining the size of the nodes.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 Unrolled_List<T, NodeSize>::Unrolled_List(const Unrolled_List &rhs) : N(rhs.N)
 {
     head = new List_Node<T, NodeSize>;
@@ -178,7 +178,7 @@ Unrolled_List<T, NodeSize>::Unrolled_List(const Unrolled_List &rhs) : N(rhs.N)
  *
  * Performs a shallow copy by swaping newly constructed nodes with rhs.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 Unrolled_List<T, NodeSize>::Unrolled_List(Unrolled_List &&rhs) : N(rhs.N)
 {
     head = new List_Node<T, NodeSize>;
@@ -195,7 +195,7 @@ Unrolled_List<T, NodeSize>::Unrolled_List(Unrolled_List &&rhs) : N(rhs.N)
 
 /* Destructor
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 Unrolled_List<T, NodeSize>::~Unrolled_List()
 {
     for (List_Node<T, NodeSize> *ptr = head; ptr->next; ptr = head) {
@@ -209,7 +209,7 @@ Unrolled_List<T, NodeSize>::~Unrolled_List()
  *
  * @return : Returns true if empty list (N == 0) and false otherwise.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 bool Unrolled_List<T, NodeSize>::empty() const noexcept
 {
     return N == 0 ? true : false;
@@ -220,8 +220,8 @@ bool Unrolled_List<T, NodeSize>::empty() const noexcept
  *
  * @return : size of the list
  */
-template <typename T, size_t NodeSize>
-size_t Unrolled_List<T, NodeSize>::size() const noexcept
+template <typename T, int NodeSize>
+int Unrolled_List<T, NodeSize>::size() const noexcept
 {
     return N;
 }
@@ -231,7 +231,7 @@ size_t Unrolled_List<T, NodeSize>::size() const noexcept
  *
  * @return : Returns a reference to the last item in the list.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 T& Unrolled_List<T, NodeSize>::back()
 {
     if (N == 0)
@@ -245,7 +245,7 @@ T& Unrolled_List<T, NodeSize>::back()
  *
  * @return : const reference to the last item of the list.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 const T& Unrolled_List<T, NodeSize>::back() const
 {
     if (N == 0)
@@ -259,7 +259,7 @@ const T& Unrolled_List<T, NodeSize>::back() const
  *
  * @return : reference to the first item in the list.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 T& Unrolled_List<T, NodeSize>::front()
 {
     if (N == 0)
@@ -273,7 +273,7 @@ T& Unrolled_List<T, NodeSize>::front()
  *
  * @return : reference to the first item in the list.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 const T& Unrolled_List<T, NodeSize>::front() const
 {
     if (N == 0)
@@ -288,7 +288,7 @@ const T& Unrolled_List<T, NodeSize>::front() const
  * Clears the linked list. Deletes nodes except for head and sets tail to the head.
  * Resets the size of the node and list.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 void Unrolled_List<T, NodeSize>::clear() noexcept
 {
     if (head->next) {
@@ -319,14 +319,14 @@ void Unrolled_List<T, NodeSize>::clear() noexcept
  * Inserts the item in list[pos]. Elements from list[pos] to the end of the list are moved back.
  * perform the necessary data movement and allocation of nodes if needed.
  */
-template <typename T, size_t NodeSize>
-void Unrolled_List<T, NodeSize>::insert(size_t pos, const T &item)
+template <typename T, int NodeSize>
+void Unrolled_List<T, NodeSize>::insert(int pos, const T &item)
 {
     if (pos > N)
         throw std::out_of_range("Error: Attempting to insert an element out range.");
 
     List_Node<T, NodeSize> *ptr = head;
-    size_t ele_skip = 0;
+    int ele_skip = 0;
 
     // Loop to skip elements until the correct node is reached.
     while (ele_skip + ptr->size < pos) {
@@ -351,14 +351,14 @@ void Unrolled_List<T, NodeSize>::insert(size_t pos, const T &item)
  * Inserts the item in list[pos]. Elements from list[pos] to the end of the list are moved back.
  * perform the necessary data movement and allocation of nodes if needed.
  */
-template <typename T, size_t NodeSize>
-void Unrolled_List<T, NodeSize>::insert(size_t pos, T &&item)
+template <typename T, int NodeSize>
+void Unrolled_List<T, NodeSize>::insert(int pos, T &&item)
 {
     if (pos > N)
         throw std::out_of_range("Error: Attempting to insert an element out range.");
 
     List_Node<T, NodeSize> *ptr = head;
-    size_t ele_skip = 0;
+    int ele_skip = 0;
 
     // Loop to skip elements until the correct node is reached.
     while (ele_skip + ptr->size < pos) {
@@ -383,7 +383,7 @@ void Unrolled_List<T, NodeSize>::insert(size_t pos, T &&item)
  *  Adds an item to the end of the data array in the tail node. If the node is at capacity,
  *  we split the data array in half and set a new tail node.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 void Unrolled_List<T, NodeSize>::push_back(const T &item)
 {
     tail->push_back(item);
@@ -402,7 +402,7 @@ void Unrolled_List<T, NodeSize>::push_back(const T &item)
  *  Adds an item to the end of the data array in the tail node. If the node is at capacity,
  *  we split the data array in half and set a new tail node.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 void Unrolled_List<T, NodeSize>::push_back(T &&item)
 {
     tail->push_back(std::move(item));
@@ -421,7 +421,7 @@ void Unrolled_List<T, NodeSize>::push_back(T &&item)
  * Shifts all data in a node back and inserts item to the front. If the node is full, we allocate
  * a new node, split the data in half, and place the node between head and head->next.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 void Unrolled_List<T, NodeSize>::push_front(const T &item)
 {
     head->push_front(item);
@@ -440,7 +440,7 @@ void Unrolled_List<T, NodeSize>::push_front(const T &item)
  * Shifts all data in a node back and inserts item to the front. If the node is full, we allocate
  * a new node, split the data in half, and place the node between head and head->next.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 void Unrolled_List<T, NodeSize>::push_front(T &&item)
 {
     head->push_front(std::move(item));
@@ -460,7 +460,7 @@ void Unrolled_List<T, NodeSize>::push_front(T &&item)
  * Overloads the << opearator to output each element in the list, with a newspace
  * between each element.
  */
-template <typename T, size_t NodeSize>
+template <typename T, int NodeSize>
 std::ostream& operator<<(std::ostream &os, const Unrolled_List<T, NodeSize> &rhs)
 {
     for (List_Node<T, NodeSize> *ptr = rhs.head; ptr; ptr = ptr->next)

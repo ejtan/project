@@ -3,7 +3,7 @@
 
 /* Default constructor
  */
-template <typename T, size_t N>
+template <typename T, int N>
 List_Node<T, N>::List_Node() : prev(nullptr), next(nullptr), size(0)
 {
 }
@@ -15,7 +15,7 @@ List_Node<T, N>::List_Node() : prev(nullptr), next(nullptr), size(0)
  *
  * Inserts an item to the back of the array.
  */
-template <typename T, size_t N>
+template <typename T, int N>
 void List_Node<T, N>::push_back(const T &item)
 {
     data[size++] = item;
@@ -28,7 +28,7 @@ void List_Node<T, N>::push_back(const T &item)
  *
  * Inserts an item to the back of the array.
  */
-template <typename T, size_t N>
+template <typename T, int N>
 void List_Node<T, N>::push_back(T &&item)
 {
     data[size++] = item;
@@ -41,7 +41,7 @@ void List_Node<T, N>::push_back(T &&item)
  *
  * Shifts all the items in the node back by 1, then places the item to the front of the array.
  */
-template <typename T, size_t N>
+template <typename T, int N>
 void List_Node<T, N>::push_front(const T &item)
 {
     data[size++] = item;
@@ -57,7 +57,7 @@ void List_Node<T, N>::push_front(const T &item)
  *
  * Shifts all the items in the node back by 1, then places the item to the front of the array.
  */
-template <typename T, size_t N>
+template <typename T, int N>
 void List_Node<T, N>::push_front(T &&item)
 {
     data[size++] = item;
@@ -74,8 +74,8 @@ void List_Node<T, N>::push_front(T &&item)
  *
  * Mooves all items whose index >= pos and moves them back 1 space. Then inserts that item into pos.
  */
-template <typename T, size_t N>
-void List_Node<T, N>::insert(size_t pos, const T &item)
+template <typename T, int N>
+void List_Node<T, N>::insert(int pos, const T &item)
 {
     data[size++] = item;
 
@@ -91,8 +91,8 @@ void List_Node<T, N>::insert(size_t pos, const T &item)
  *
  * Mooves all items whose index >= pos and moves them back 1 space. Then inserts that item into pos.
  */
-template <typename T, size_t N>
-void List_Node<T, N>::insert(size_t pos, T &&item)
+template <typename T, int N>
+void List_Node<T, N>::insert(int pos, T &&item)
 {
     data[size++] = item;
 

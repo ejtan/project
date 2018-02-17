@@ -10,20 +10,20 @@
  *
  * A node for an unrolled linked list.
  */
-template <typename T, size_t N>
+template <typename T, int N>
 struct List_Node
 {
     std::array<T, N> data;
     List_Node *prev, *next;
-    size_t size;
+    int size;
 
     List_Node();
     void push_back(const T &item);
     void push_back(T &&item);
     void push_front(const T &item);
     void push_front(T &&item);
-    void insert(size_t pos, const T &item);
-    void insert(size_t pos, T &&item);
+    void insert(int pos, const T &item);
+    void insert(int pos, T &&item);
 };
 
 
