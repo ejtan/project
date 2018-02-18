@@ -56,6 +56,8 @@ class Unrolled_List
         void clear() noexcept;
         void insert(int pos, const T &item);
         void insert(int pos, T &&item);
+        void pop_back();
+        void pop_front();
         void push_back(const T &item);
         void push_back(T &&item);
         void push_front(const T &item);

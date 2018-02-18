@@ -375,6 +375,55 @@ void Unrolled_List<T, NodeSize>::insert(int pos, T &&item)
 }
 
 
+/* pop_back()
+ *
+ * Resizes the last node. If the size of the node is 0, delete the node and move the tail pointer.
+ */
+template <typename T, int NodeSize>
+void Unrolled_List<T, NodeSize>::pop_back()
+{
+    // Check if there are elements in the list.
+    if (!N)
+        throw std::out_of_range("Error: Attempting to pop empty list.");
+
+    tail->size--;
+    N--;
+
+    // Delete node if the node size is 0 and if N > 0
+    if (!tail->size && N) {
+        List_Node<T, NodeSize> *ptr = tail->prev;
+        delete tail;
+        tail = ptr;
+        ptr->next = nullptr;
+    }
+}
+
+
+/* pop_front()
+ *
+ * Removes the first element of the list by rotating the data array and decramenting the node size.
+ * Deletes the node if needed and moves the head pointer.
+ */
+template <typename T, int NodeSize>
+void Unrolled_List<T, NodeSize>::pop_front()
+{
+    if (!N)
+        throw std::out_of_range("Error: Attempting to pop empty list.");
+
+    // Rotate so that data[1] is now data[0]
+    std::rotate(head->data.begin(), head->data.begin() + 1, head->data.begin() + head->size);
+    head->size--;
+    N--;
+
+    // Delete node if the node size is 0 and N > 0
+    if (!head->size && N) {
+        List_Node<T, NodeSize> *ptr = head->next;
+        delete head;
+        head = ptr;
+        ptr->prev = nullptr;
+    }
+}
+
 
 /* push_back(item)
  *
