@@ -21,5 +21,5 @@ int block_low(int id, int p, int n);
 int block_high(int id, int p, int n);
 int block_size(int id, int p, int n);
 void make_mixed_xfer_array(int p, int n, std::vector<int> &cnt, std::vector<int> &disp);
-void make_uniforn_xfer_array(int id, int p, int n, std::vector<int> &cnt, std::vector<int> &disp);
+void make_uniform_xfer_array(int id, int p, int n, std::vector<int> &cnt, std::vector<int> &disp);
 

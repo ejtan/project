@@ -82,7 +82,7 @@ void make_mixed_xfer_array(int p, int n, std::vector<int> &cnt, std::vector<int>
  *
  * Creates arrays used for transfering data in MPI collective communications.
  */
-void make_uniforn_xfer_array(int id, int p, int n, std::vector<int> &cnt, std::vector<int> &disp)
+void make_uniform_xfer_array(int id, int p, int n, std::vector<int> &cnt, std::vector<int> &disp)
 {
     cnt.resize(p);
     disp.resize(p);
