@@ -57,6 +57,7 @@ dim2 read_row_matrix(const std::string &filename, float **A, MPI_Comm comm)
         // Proc p-1 read its peice
         for (int i = 0; i < local_rows * n; i++)
             inf >> (*A)[i];
+
     } else {
         MPI_Status stat;
         MPI_Recv(*A, local_rows * n, MPI_FLOAT, p - 1, DATA_MSG, comm, &stat);
@@ -151,7 +152,7 @@ void print_row_matrix(const float *A, const dim2 &dim, MPI_Comm comm)
     int local_rows = block_size(id, p, dim.first);
 
     if (!id) {
-        print_submatrix(A, local_rows, dim.first);
+        print_submatrix(A, local_rows, dim.second);
 
         if (p > 1) {
             int max_blk_size = block_size(p - 1, p, dim.first);
