@@ -1,6 +1,3 @@
-/* NOTE: CHECK FOR NONSQUARE MATRICES
- */
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -95,8 +92,8 @@ void row_replicated_sgemv(const std::string &mat, const std::string &vec, int p,
             c_blk[i] += A[i * n + j] * b[j];
     } // Loop over local_rows
 
-    replicate_block_vector(c_blk, n, &c, MPI_COMM_WORLD);
-    print_replicated_vector(c, n, MPI_COMM_WORLD);
+    replicate_block_vector(c_blk, dim.first, &c, MPI_COMM_WORLD);
+    print_replicated_vector(c, dim.first, MPI_COMM_WORLD);
 
     delete[] A;
     delete[] b;
@@ -135,8 +132,8 @@ void row_block_sgemv(const std::string &mat, const std::string &vec, int p, int 
 //    print_block_vector(b, n, MPI_COMM_WORLD);
 
     // SGEMV implamentation
-    int n_blk = block_size(id, p, n);
-    float *c = new float[n_blk];
+    int m_blk = block_size(id, p, dim.first);
+    float *c = new float[m_blk];
     float *replicate_b = new float[n];
     std::vector<int> disp, cnt;
 
@@ -147,13 +144,13 @@ void row_block_sgemv(const std::string &mat, const std::string &vec, int p, int 
     MPI_Allgatherv(b, cnt[id], MPI_FLOAT, replicate_b,
             cnt.data(), disp.data(), MPI_FLOAT, MPI_COMM_WORLD);
 
-    for (int i = 0; i < n_blk; i++) {
+    for (int i = 0; i < m_blk; i++) {
         c[i] = 0.0;
         for (int j = 0; j < n; j++)
             c[i] += A[i * n + j] * replicate_b[j];
     } // Loop over rows in block
 
-    print_block_vector(c, n, MPI_COMM_WORLD);
+    print_block_vector(c, dim.first, MPI_COMM_WORLD);
 
     delete[] A;
     delete[] b;
@@ -192,37 +189,36 @@ void col_replicated_sgemv(const std::string &mat, const std::string &vec, int p,
 //    print_replicated_vector(b, n, MPI_COMM_WORLD);
 
     // SGEMV Implamentation
+    int local_rows = block_size(id, p, dim.first);
     int local_cols = block_size(id, p, n);
+    int blk_idx = block_low(id, p, n);
     float *partial_c = new float[dim.first];
     std::vector<int> cnt_out, disp_out, cnt_in, disp_in;
 
-    // Generate transfer arrays for alltoallv
-    make_mixed_xfer_array(p, dim.first, cnt_out, disp_out);
-    make_uniform_xfer_array(id, p, dim.first, cnt_in, disp_in);
-
     // Compute partial results of c. There are local_cols worth of elements to perform
     // the matrix vector multiplication, so we will only have the partial result.
-    // Note that elements in the replicated vector needs to be offset using disp_out[id].
+    // The subvector is offset byblk_idx
     for (int i = 0; i < dim.first; i++) {
         partial_c[i] = 0.0;
         for (int j = 0; j < local_cols; j++)
-            partial_c[i] += A[i * local_cols + j] * b[disp_out[id] + j];
+            partial_c[i] += A[i * local_cols + j] * b[blk_idx + j];
     } // Loop over rows
 
-    float *partial_c_blk = new float[p * local_cols];
-    float *c_blk = new float[local_cols];
+    float *partial_c_blk = new float[p * local_rows];
+    float *c_blk = new float[local_rows];
     float *c = new float[dim.first];
 
-    // Gather all partial sums into partial_blk_c. Then, we perform a sum of all these
-    // partial vectors. The elements of partial_blk_c are further reduced into c_blk and
-    // reconstructed from blocks into a replicated vector c.
+    // Perform an all to all so that each proc owns a block of partial_c. We then reduce these
+    // partial c into a block of c. Lastly, we replicate the vector.
+    make_mixed_xfer_array(p, dim.first, cnt_out, disp_out);
+    make_uniform_xfer_array(id, p, dim.first, cnt_in, disp_in);
     MPI_Alltoallv(partial_c, cnt_out.data(), disp_out.data(), MPI_FLOAT, partial_c_blk,
             cnt_in.data(), disp_in.data(), MPI_FLOAT, MPI_COMM_WORLD);
 
-    for (int i = 0; i < local_cols; i++) {
+    for (int i = 0; i < local_rows; i++) {
         c_blk[i] = 0.0;
         for (int j = 0; j < p; j++)
-            c_blk[i] += partial_c_blk[i + j * local_cols];
+            c_blk[i] += partial_c_blk[i + (j * local_rows)];
     } // Loop over number of local elements.
 
     replicate_block_vector(c_blk, dim.first, &c, MPI_COMM_WORLD);
@@ -266,6 +262,7 @@ void col_block_sgemv(const std::string &mat, const std::string &vec, int p, int 
 //    print_block_vector(b, n, MPI_COMM_WORLD);
 
     // SGEMV Implamentation
+    int local_rows = block_size(id, p, dim.first);
     int local_cols = block_size(id, p, n);
     float *partial_c = new float[dim.first];
 
@@ -280,18 +277,18 @@ void col_block_sgemv(const std::string &mat, const std::string &vec, int p, int 
     // In order to get the blocks for c, we need to do an all to all with partial_c so that
     // the correct procs get every partial_c element to sum.
     std::vector<int> cnt_out, disp_out, cnt_in, disp_in;
-    float *partial_c_blk = new float[p * local_cols];
-    float *c = new float[local_cols];
+    float *partial_c_blk = new float[p * local_rows];
+    float *c = new float[local_rows];
 
     make_mixed_xfer_array(p, dim.first, cnt_out, disp_out);
     make_uniform_xfer_array(id, p, dim.first, cnt_in, disp_in);
     MPI_Alltoallv(partial_c, cnt_out.data(), disp_out.data(), MPI_FLOAT, partial_c_blk,
             cnt_in.data(), disp_in.data(), MPI_FLOAT, MPI_COMM_WORLD);
 
-    for (int i = 0; i < local_cols; i++) {
+    for (int i = 0; i < local_rows; i++) {
         c[i] = 0.0;
         for (int j = 0; j < p; j++)
-            c[i] += partial_c_blk[i + j * local_cols];
+            c[i] += partial_c_blk[i + (j * local_rows)];
     } // Loop over elements in c
 
     print_block_vector(c, dim.first, MPI_COMM_WORLD);
