@@ -12,7 +12,7 @@ namespace po = boost::program_options;
 /*-------------------------------------------------------------------------------------------------
  * FORWARD DECLARATIONS
  *-----------------------------------------------------------------------------------------------*/
-void count_filesize(const fs::path &root);
+void count_filesize(const fs::path &root, bool use_symlink);
 
 
 /*-------------------------------------------------------------------------------------------------
@@ -27,11 +27,13 @@ int main(int argc, char *argv[])
         } // Print usage message if no arguments
 
         fs::path root_dir;
+        bool use_symlink = false;
 
         // Allowed flags / program options
         po::options_description program("Allowed Options");
         program.add_options()
-            ("help,h", "Print help message.");
+            ("help,h", "Print help message.")
+            ("sym,s", "Allow symbolic links.");
 
         // Hidden argument not printed in help message.
         po::options_description hidden;
@@ -56,7 +58,10 @@ int main(int argc, char *argv[])
             return 0;
         } // Output help message and exit program
 
-        count_filesize(root_dir);
+        if (args.count("sym"))
+            use_symlink = true;
+
+        count_filesize(root_dir, use_symlink);
     } catch (std::exception &e) {
         std::cout << "Exception caught: " << e.what() << std::endl;
         return EXIT_FAILURE;
@@ -74,12 +79,14 @@ int main(int argc, char *argv[])
 /* count_filesize()
  *
  * @INPUT: root = path to directory to find the size of
+ * @INPUT: use_symlink = allow symlink
  *
  * Recursively iterate through a directory and totals the size of valid files.
  */
-void count_filesize(const fs::path &root)
+void count_filesize(const fs::path &root, bool use_symlink)
 {
-    auto dir_iter = fs::recursive_directory_iterator(root);
+    auto dir_iter = (!use_symlink) ? fs::recursive_directory_iterator(root) :
+        fs::recursive_directory_iterator(root, fs::directory_options::follow_directory_symlink);
 
     // Accumulate file sizes. uintmax_t is what file_size returns
     std::uintmax_t dir_size = std::accumulate(fs::begin(dir_iter), fs::end(dir_iter),
