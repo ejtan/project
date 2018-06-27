@@ -1,6 +1,7 @@
 #include <iostream>
 #include <exception>
 #include <filesystem>
+#include <numeric>
 
 #include <boost/program_options.hpp>
 
@@ -8,6 +9,15 @@ namespace fs = std::filesystem;
 namespace po = boost::program_options;
 
 
+/*-------------------------------------------------------------------------------------------------
+ * FORWARD DECLARATIONS
+ *-----------------------------------------------------------------------------------------------*/
+void count_filesize(const fs::path &root);
+
+
+/*-------------------------------------------------------------------------------------------------
+ * MAIN
+ *-----------------------------------------------------------------------------------------------*/
 int main(int argc, char *argv[])
 {
     try {
@@ -45,6 +55,8 @@ int main(int argc, char *argv[])
             std::cout << program << std::endl;
             return 0;
         } // Output help message and exit program
+
+        count_filesize(root_dir);
     } catch (std::exception &e) {
         std::cout << "Exception caught: " << e.what() << std::endl;
         return EXIT_FAILURE;
@@ -52,4 +64,28 @@ int main(int argc, char *argv[])
         std::cout << "Unknown exception caught in main()." << std::endl;
         return EXIT_FAILURE;
     }
+}
+
+
+/*-------------------------------------------------------------------------------------------------
+ * FUNCTIONS
+ *-----------------------------------------------------------------------------------------------*/
+
+/* count_filesize()
+ *
+ * @INPUT: root = path to directory to find the size of
+ *
+ * Recursively iterate through a directory and totals the size of valid files.
+ */
+void count_filesize(const fs::path &root)
+{
+    auto dir_iter = fs::recursive_directory_iterator(root);
+
+    // Accumulate file sizes. uintmax_t is what file_size returns
+    std::uintmax_t dir_size = std::accumulate(fs::begin(dir_iter), fs::end(dir_iter),
+            std::uintmax_t(0), [](const std::uintmax_t tot, const fs::directory_entry &f) {
+            return fs::is_regular_file(f) ? f.file_size() + tot : tot;
+    });
+
+    std::cout << "Total size of files in " << root << ": " << dir_size << " bytes.\n";
 }
