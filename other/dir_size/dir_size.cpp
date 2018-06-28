@@ -2,8 +2,11 @@
 #include <exception>
 #include <filesystem>
 #include <numeric>
+#include <clocale>
 
 #include <boost/program_options.hpp>
+
+#include <fmt/format.h>
 
 namespace fs = std::filesystem;
 namespace po = boost::program_options;
@@ -25,6 +28,9 @@ int main(int argc, char *argv[])
             std::cout << "Usage: " << argv[0] << "dir [Options]" << std::endl;
             return 0;
         } // Print usage message if no arguments
+
+        // Set current system locale
+        std::setlocale(LC_ALL, "");
 
         fs::path root_dir;
         bool use_symlink = false;
@@ -94,5 +100,5 @@ void count_filesize(const fs::path &root, bool use_symlink)
             return fs::is_regular_file(f) ? f.file_size() + tot : tot;
     });
 
-    std::cout << "Total size of files in " << root << ": " << dir_size << " bytes.\n";
+    fmt::print("{:<{}} {:>n} bytes\n", root.string(), root.string().length() + 5, dir_size);
 }
