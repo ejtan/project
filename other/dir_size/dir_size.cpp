@@ -29,9 +29,6 @@ int main(int argc, char *argv[])
             return 0;
         } // Print usage message if no arguments
 
-        // Set current system locale
-        std::setlocale(LC_ALL, "");
-
         fs::path root_dir;
         bool use_symlink = false;
 
@@ -39,7 +36,8 @@ int main(int argc, char *argv[])
         po::options_description program("Allowed Options");
         program.add_options()
             ("help,h", "Print help message.")
-            ("sym,s", "Allow symbolic links.");
+            ("sym,s", "Allow symbolic links.")
+            ("nice,n", "Use nice number output(based on system locale).");
 
         // Hidden argument not printed in help message.
         po::options_description hidden;
@@ -66,6 +64,9 @@ int main(int argc, char *argv[])
 
         if (args.count("sym"))
             use_symlink = true;
+
+        if (args.count("nice"))
+            std::setlocale(LC_ALL, "");
 
         count_filesize(root_dir, use_symlink);
     } catch (std::exception &e) {
