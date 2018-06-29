@@ -1,21 +1,15 @@
 #include <iostream>
 #include <exception>
 #include <filesystem>
-#include <numeric>
 #include <clocale>
 
 #include <boost/program_options.hpp>
 
-#include <fmt/format.h>
+#include "count_filesize.h"
+
 
 namespace fs = std::filesystem;
 namespace po = boost::program_options;
-
-
-/*-------------------------------------------------------------------------------------------------
- * FORWARD DECLARATIONS
- *-----------------------------------------------------------------------------------------------*/
-void count_filesize(const fs::path &root, bool use_symlink);
 
 
 /*-------------------------------------------------------------------------------------------------
@@ -70,7 +64,7 @@ int main(int argc, char *argv[])
         if (args.count("nice"))
             std::setlocale(LC_ALL, "");
 
-        count_filesize(root_dir, use_symlink);
+        count_filesize(root_dir, use_symlink, max_depth);
     } catch (std::exception &e) {
         std::cout << "Exception caught: " << e.what() << std::endl;
         return EXIT_FAILURE;
@@ -78,30 +72,4 @@ int main(int argc, char *argv[])
         std::cout << "Unknown exception caught in main()." << std::endl;
         return EXIT_FAILURE;
     }
-}
-
-
-/*-------------------------------------------------------------------------------------------------
- * FUNCTIONS
- *-----------------------------------------------------------------------------------------------*/
-
-/* count_filesize()
- *
- * @INPUT: root = path to directory to find the size of
- * @INPUT: use_symlink = allow symlink
- *
- * Recursively iterate through a directory and totals the size of valid files.
- */
-void count_filesize(const fs::path &root, bool use_symlink)
-{
-    auto dir_iter = (!use_symlink) ? fs::recursive_directory_iterator(root) :
-        fs::recursive_directory_iterator(root, fs::directory_options::follow_directory_symlink);
-
-    // Accumulate file sizes. uintmax_t is what file_size returns
-    std::uintmax_t dir_size = std::accumulate(fs::begin(dir_iter), fs::end(dir_iter),
-            std::uintmax_t(0), [](const std::uintmax_t tot, const fs::directory_entry &f) {
-            return fs::is_regular_file(f) ? f.file_size() + tot : tot;
-    });
-
-    fmt::print("{:<{}} {:>n} bytes\n", root.string(), root.string().length() + 5, dir_size);
 }

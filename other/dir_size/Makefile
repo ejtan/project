@@ -2,9 +2,19 @@ CXX=g++
 CXXFLAGS=-std=c++17 -O2 -pipe -march=native -flto
 WARN=-Wall -Wextra
 LIBS=-lstdc++fs -lboost_program_options -lfmt
+OBJ=main.o count_filesize.o
 
-dir_size.out: dir_size.cpp
-	$(CXX) dir_size.cpp $(CXXFLAGS) $(WARN) $(LIBS) -o dir_size.out
+dir_size.out: $(OBJ)
+	$(CXX) $(OBJ) $(CXXFLAGS) $(WARN) $(LIBS) -o dir_size.out
+
+main.o: main.cpp
+	$(CXX) main.cpp $(CXXFLAGS) $(WARN) $(LIBS) -c
+
+count_filesize.o: count_filesize.cpp
+	$(CXX) count_filesize.cpp $(CXXFLAGS) $(WARN) $(LIBS) -c
+
+oclean:
+	rm -f $(OBJ)
 
 clean:
-	rm -f dir_size.out
+	rm -f $(OBJ) dir_size.out
