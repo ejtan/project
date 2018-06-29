@@ -31,13 +31,15 @@ int main(int argc, char *argv[])
 
         fs::path root_dir;
         bool use_symlink = false;
+        int max_depth = -1; // set to -1 to indicate no max depth set
 
         // Allowed flags / program options
         po::options_description program("Allowed Options");
         program.add_options()
             ("help,h", "Print help message.")
             ("sym,s", "Allow symbolic links.")
-            ("nice,n", "Use nice number output(based on system locale).");
+            ("nice,n", "Use nice number output(based on system locale).")
+            ("depth,d", po::value<int>(&max_depth),"Set max recurson depth to arg.");
 
         // Hidden argument not printed in help message.
         po::options_description hidden;
