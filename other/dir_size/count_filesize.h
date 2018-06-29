@@ -24,5 +24,18 @@ void count_filesize(const std::filesystem::path &root, bool use_symlink, int max
  */
 std::uintmax_t count_all_files(const std::filesystem::recursive_directory_iterator &dir_it);
 
+/* count_max_depth()
+ *
+ * @INPUT: dir = directory
+ * @INPUT: use_symlink = allow symlink
+ * @INPUT: max_depth = max recursion depth allowed.
+ *
+ * @RETURN: std::uintmax_t = total size of contents of the directory
+ *
+ * Computes the size of a directory up to a recursion depth. Requires a call to
+ * recursive_directory_iterator.depth() so this must be done with a for loop.
+ */
+std::uintmax_t count_max_depth(const std::filesystem::path &dir, bool use_symlink, int max_depth);
+
 
 #endif
