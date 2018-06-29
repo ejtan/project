@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
         po::options_description program("Allowed Options");
         program.add_options()
             ("help,h", "Print help message.")
-            ("sym,s", "Allow symbolic links.")
+            ("sym,s", po::bool_switch(&use_symlink), "Allow symbolic links.")
             ("nice,n", "Use nice number output(based on system locale).")
             ("depth,d", po::value<int>(&max_depth),"Set max recurson depth to arg.");
 
@@ -57,9 +57,6 @@ int main(int argc, char *argv[])
             std::cout << program << std::endl;
             return 0;
         } // Output help message and exit program
-
-        if (args.count("sym"))
-            use_symlink = true;
 
         if (args.count("nice"))
             std::setlocale(LC_ALL, "");
