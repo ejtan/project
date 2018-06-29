@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
         program.add_options()
             ("help,h", "Print help message.")
             ("sym,s", po::bool_switch(&use_symlink), "Allow symbolic links.")
-            ("nice,n", "Use nice number output(based on system locale).")
+            ("nice,n", "Use nice number output (based on system locale).")
             ("depth,d", po::value<int>(&max_depth),"Set max recurson depth to arg.");
 
         // Hidden argument not printed in help message.
