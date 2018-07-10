@@ -1,4 +1,5 @@
 #include <iostream>
+#include <clocale>
 
 #include "cmd_options.h"
 
@@ -29,6 +30,10 @@ cmd_options::cmd_options(int argc, char **const argv)
     boost::program_options::store(boost::program_options::command_line_parser(argc, argv).
             options(cmd_line_input).positional(dir_arg).run(), arg_values);
     boost::program_options::notify(arg_values);
+
+    // Set locale if provided
+    if (arg_values.count("n"))
+        std::setlocale(LC_ALL, "");
 }
 
 
