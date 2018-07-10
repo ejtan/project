@@ -10,8 +10,8 @@ cmd_options::cmd_options(int argc, char **const argv)
     program.add_options()
         ("help,h", "Prints help message.")
         ("sym,s", boost::program_options::bool_switch(&use_symlink), "Allow symbolic links.")
-        ("n", "Use nice number output (uses system locale).")
-        ("d", "Set max recursion depth allowed");
+        (",n", "Use nice number output (uses system locale).")
+        (",d", "Set max recursion depth allowed");
 
     // Hidden input not printed in help message.
     boost::program_options::options_description hidden;
@@ -32,7 +32,7 @@ cmd_options::cmd_options(int argc, char **const argv)
     boost::program_options::notify(arg_values);
 
     // Set locale if provided
-    if (arg_values.count("n"))
+    if (arg_values.count("-n"))
         std::setlocale(LC_ALL, "");
 }
 
