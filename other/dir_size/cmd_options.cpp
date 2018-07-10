@@ -28,3 +28,13 @@ cmd_options::cmd_options(int argc, char **const argv)
             options(cmd_line_input).positional(dir_arg).run(), arg_values);
     boost::program_options::notify(arg_values);
 }
+
+
+/* is_help()
+ *
+ * @return: bool: true if help flag is provided, false otherwise.
+ */
+bool cmd_options::is_help() const
+{
+    return arg_values.count("help");
+}

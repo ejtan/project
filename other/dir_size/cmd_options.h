@@ -20,6 +20,7 @@ class cmd_options
 
     public:
         cmd_options(int argc, char **const argv);
+        bool is_help() const;
 };
 
 
