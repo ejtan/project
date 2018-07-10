@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "cmd_options.h"
 
 
@@ -37,4 +39,21 @@ cmd_options::cmd_options(int argc, char **const argv)
 bool cmd_options::is_help() const
 {
     return arg_values.count("help");
+}
+
+
+/* overloaded <<
+ *
+ * @param: os = ostream
+ * @param: cmd_options = options to print
+ *
+ * @return: ostream
+ *
+ * Prints out the options_description variable program. The output represents the avaliable
+ * options avaliable when using the command.
+ */
+std::ostream& operator<<(std::ostream &os, const cmd_options &opts)
+{
+    os << "Options: \n" << opts.program;
+    return os;
 }

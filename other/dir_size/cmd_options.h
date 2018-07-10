@@ -21,6 +21,7 @@ class cmd_options
     public:
         cmd_options(int argc, char **const argv);
         bool is_help() const;
+        friend std::ostream& operator<<(std::ostream &os, const cmd_options &opts);
 };
 
 
