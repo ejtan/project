@@ -16,7 +16,7 @@ cmd_options::cmd_options(int argc, char **const argv)
     // Hidden input not printed in help message.
     boost::program_options::options_description hidden;
     hidden.add_options()
-        ("dir", boost::program_options::value<std::filesystem::path>(&root_dir), "Input directory");
+        ("dir", "Input directory");
 
     // Take the directory input as a positional parameter
     boost::program_options::positional_options_description dir_arg;
@@ -44,6 +44,16 @@ cmd_options::cmd_options(int argc, char **const argv)
 bool cmd_options::is_help() const
 {
     return arg_values.count("help");
+}
+
+
+/* get_root_dir()
+ *
+ * @return: const string reference representing the path to root directory
+ */
+const std::string& cmd_options::get_root_dir() const
+{
+    return arg_values["dir"].as<std::string>();
 }
 
 
