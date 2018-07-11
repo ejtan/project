@@ -2,6 +2,7 @@
 #define CMD_OPTIONS_H
 
 #include <optional>
+#include <unordered_map>
 
 #include <boost/program_options.hpp>
 
@@ -17,6 +18,10 @@ class cmd_options
         boost::program_options::options_description program;
         bool use_symlink;
         std::string prefix_str;
+        // Small lookup table for --prefix flag
+        const std::unordered_map<std::string, double> conversion_table = {
+            {"kB", 1000.0}, {"MB", 1000000.0}, {"GB", 1000000000.0},
+            {"KiB", 1024.0}, {"MiB", 1048576.0}, {"GiB", 1073741824.0} };
 
     public:
         cmd_options(int argc, char **const argv);
@@ -25,6 +30,7 @@ class cmd_options
         std::optional<int> get_max_depth() const;
         std::optional<std::string> get_prefix() const;
         bool use_symlinks() const;
+        double convert_size(double size) const noexcept;
         friend std::ostream& operator<<(std::ostream &os, const cmd_options &opts);
 };
 

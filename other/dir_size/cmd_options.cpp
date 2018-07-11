@@ -96,6 +96,20 @@ bool cmd_options::use_symlinks() const
 }
 
 
+/* convert_size()
+ *
+ * @param: size = number to convert
+ *
+ * @param: double with size converted by a value determined by prefix_str.
+ *
+ * Note we will check if the prefix flag is used before doing the conversion.
+ */
+double cmd_options::convert_size(double size) const noexcept
+{
+    return size / conversion_table.find(prefix_str)->second;
+}
+
+
 /* overloaded <<
  *
  * @param: os = ostream
