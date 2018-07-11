@@ -3,16 +3,16 @@
 
 #include <filesystem>
 
+#include "cmd_options.h"
+
 
 /* count_filesize()
  *
- * @INPUT: root = path to directory to find the size of
- * @INPUT: use_symlink = allow symlink
- * @INPUT: max_depth = max recursion depth allowed.
+ * @INPUT: opts = command options
  *
  * Recursively iterate through a directory and totals the size of valid files.
  */
-void count_filesize(const std::filesystem::path &root, bool use_symlink, int max_depth);
+void count_filesize(const cmd_options &opts);
 
 /* count_all_files()
  *
