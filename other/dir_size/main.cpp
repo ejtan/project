@@ -24,7 +24,9 @@ int main(int argc, char *argv[])
         cmd_options opts(argc, argv);
 
         if (opts.is_help()) {
-            std::cout << usage_msg << "\n\n" << opts << std::endl;
+            std::cout << usage_msg << "\n\n"
+                << "Purpose: Sums up the size of all files contained in dir\n\n"
+                << opts << std::endl;
             return 0;
         } // Outputs help message and exits
 
