@@ -11,7 +11,13 @@ cmd_options::cmd_options(int argc, char **const argv)
         ("help,h", "Prints help message.")
         ("sym,s", boost::program_options::bool_switch(&use_symlink), "Allow symbolic links.")
         (",n", "Use nice number output (uses system locale).")
-        (",d", boost::program_options::value<int>(), "Set max recursion depth allowed");
+        (",d", boost::program_options::value<int>(), "Set max recursion depth allowed")
+        ("prefix,p", boost::program_options::value<std::string>(&prefix_str),
+         "Convert bytes to the corresponding prefix (below).\n"
+         "SI Units:            Binary:\n"
+         "  kB - 10^3 bytes      KiB - 1024 bytes\n"
+         "  MB - 10^6 bytes      MiB - 1024^2 bytes\n"
+         "  GB - 10^8 bytes      GiB - 1024^3 bytes");
 
     // Hidden input not printed in help message.
     boost::program_options::options_description hidden;

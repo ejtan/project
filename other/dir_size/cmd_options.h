@@ -16,6 +16,7 @@ class cmd_options
         boost::program_options::variables_map arg_values;
         boost::program_options::options_description program;
         bool use_symlink;
+        std::string prefix_str;
 
     public:
         cmd_options(int argc, char **const argv);
