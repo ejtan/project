@@ -75,6 +75,17 @@ std::optional<int> cmd_options::get_max_depth() const
 }
 
 
+/* get_prefix()
+ *
+ * @return: optional<string> with either the prefix passed in by command line or nullopt
+ */
+std::optional<std::string> cmd_options::get_prefix() const
+{
+    return (arg_values.count("prefix")) ?
+        std::make_optional<std::string>(prefix_str) : std::nullopt;
+}
+
+
 /* use_symlinks()
  *
  * @return: returns use_symlink variable
