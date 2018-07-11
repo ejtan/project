@@ -22,6 +22,7 @@ class cmd_options
         bool is_help() const;
         const std::string& get_root_dir() const;
         std::optional<int> get_max_depth() const;
+        bool use_symlinks() const;
         friend std::ostream& operator<<(std::ostream &os, const cmd_options &opts);
 };
 

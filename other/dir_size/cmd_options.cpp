@@ -69,6 +69,16 @@ std::optional<int> cmd_options::get_max_depth() const
 }
 
 
+/* use_symlinks()
+ *
+ * @return: returns use_symlink variable
+ */
+bool cmd_options::use_symlinks() const
+{
+    return use_symlink;
+}
+
+
 /* overloaded <<
  *
  * @param: os = ostream
