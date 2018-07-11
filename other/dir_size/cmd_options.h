@@ -1,6 +1,8 @@
 #ifndef CMD_OPTIONS_H
 #define CMD_OPTIONS_H
 
+#include <optional>
+
 #include <boost/program_options.hpp>
 
 
@@ -19,6 +21,7 @@ class cmd_options
         cmd_options(int argc, char **const argv);
         bool is_help() const;
         const std::string& get_root_dir() const;
+        std::optional<int> get_max_depth() const;
         friend std::ostream& operator<<(std::ostream &os, const cmd_options &opts);
 };
 

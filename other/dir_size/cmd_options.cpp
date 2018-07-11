@@ -11,7 +11,7 @@ cmd_options::cmd_options(int argc, char **const argv)
         ("help,h", "Prints help message.")
         ("sym,s", boost::program_options::bool_switch(&use_symlink), "Allow symbolic links.")
         (",n", "Use nice number output (uses system locale).")
-        (",d", "Set max recursion depth allowed");
+        (",d", boost::program_options::value<int>(), "Set max recursion depth allowed");
 
     // Hidden input not printed in help message.
     boost::program_options::options_description hidden;
@@ -54,6 +54,18 @@ bool cmd_options::is_help() const
 const std::string& cmd_options::get_root_dir() const
 {
     return arg_values["dir"].as<std::string>();
+}
+
+
+/* get_max_depth()
+ *
+ * @return: optional<int> containing either the max recursion depth if
+ *          exists or an empty optional if not
+ */
+std::optional<int> cmd_options::get_max_depth() const
+{
+    return (arg_values.count("-d")) ?
+        std::make_optional<int>(arg_values["-d"].as<int>()) : std::nullopt;
 }
 
 
