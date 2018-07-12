@@ -3,16 +3,18 @@
 
 #include "cmd_options.h"
 
+namespace po = boost::program_options;
+
 
 cmd_options::cmd_options(int argc, char **const argv)
 {
     // Allowed flags
     program.add_options()
         ("help,h", "Prints help message.")
-        ("sym,s", boost::program_options::bool_switch(&use_symlink), "Allow symbolic links.")
+        ("sym,s", po::bool_switch(&use_symlink), "Allow symbolic links.")
         (",n", "Use nice number output (uses system locale).")
-        (",d", boost::program_options::value<int>(), "Set max recursion depth allowed")
-        ("prefix,p", boost::program_options::value<std::string>(&prefix_str),
+        (",d", po::value<int>(), "Set max recursion depth allowed")
+        ("prefix,p", po::value<std::string>(&prefix_str),
          "Convert bytes to the corresponding prefix (below).\n"
          "SI Units:            Binary:\n"
          "  kB - 10^3 bytes      KiB - 1024 bytes\n"
@@ -20,22 +22,22 @@ cmd_options::cmd_options(int argc, char **const argv)
          "  GB - 10^8 bytes      GiB - 1024^3 bytes");
 
     // Hidden input not printed in help message.
-    boost::program_options::options_description hidden;
+    po::options_description hidden;
     hidden.add_options()
-        ("dir", boost::program_options::value<std::string>(), "Input directory");
+        ("dir", po::value<std::string>(), "Input directory");
 
     // Take the directory input as a positional parameter
-    boost::program_options::positional_options_description dir_arg;
+    po::positional_options_description dir_arg;
     dir_arg.add("dir", -1);
 
     // Group hidden and program options
-    boost::program_options::options_description cmd_line_input;
+    po::options_description cmd_line_input;
     cmd_line_input.add(program).add(hidden);
 
     // Store arguments to variables_map arg_values
-    boost::program_options::store(boost::program_options::command_line_parser(argc, argv).
+    po::store(po::command_line_parser(argc, argv).
             options(cmd_line_input).positional(dir_arg).run(), arg_values);
-    boost::program_options::notify(arg_values);
+    po::notify(arg_values);
 
     // Set locale if provided
     if (arg_values.count("-n"))
@@ -43,8 +45,7 @@ cmd_options::cmd_options(int argc, char **const argv)
 
     // Check for a valid --prefix input. Check againsts conversion_table
     if (arg_values.count("prefix") && conversion_table.find(prefix_str) == conversion_table.end())
-            throw boost::program_options::validation_error(
-                    boost::program_options::validation_error::invalid_option_value);
+            throw po::validation_error(po::validation_error::invalid_option_value);
 }
 
 
