@@ -40,6 +40,11 @@ cmd_options::cmd_options(int argc, char **const argv)
     // Set locale if provided
     if (arg_values.count("-n"))
         std::setlocale(LC_ALL, "");
+
+    // Check for a valid --prefix input. Check againsts conversion_table
+    if (arg_values.count("prefix") && conversion_table.find(prefix_str) == conversion_table.end())
+            throw boost::program_options::validation_error(
+                    boost::program_options::validation_error::invalid_option_value);
 }
 
 
