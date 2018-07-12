@@ -27,7 +27,8 @@ class cmd_options
 
     public:
         // Typedef
-        typedef std::vector<std::string>::iterator iterator;
+        typedef std::vector<std::string>::iterator       iterator;
+        typedef std::vector<std::string>::const_iterator const_iterator;
 
         // Public member functions
         cmd_options(int argc, char **const argv);
@@ -39,6 +40,8 @@ class cmd_options
         double convert_size(double size) const noexcept;
         iterator begin() noexcept;
         iterator end() noexcept;
+        const_iterator begin() const noexcept;
+        const_iterator end() const noexcept;
         friend std::ostream& operator<<(std::ostream &os, const cmd_options &opts);
 };
 

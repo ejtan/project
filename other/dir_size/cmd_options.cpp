@@ -136,6 +136,26 @@ cmd_options::iterator cmd_options::end() noexcept
 }
 
 
+/* begin()
+ *
+ * @return: const_iterator to the beginning of vector<string>
+ */
+cmd_options::const_iterator cmd_options::begin() const noexcept
+{
+    return dirs.cbegin();
+}
+
+
+/* end()
+ *
+ * @return: const_iterator to the end of vector<string>
+ */
+cmd_options::const_iterator cmd_options::end() const noexcept
+{
+    return dirs.cend();
+}
+
+
 /* overloaded <<
  *
  * @param: os = ostream
