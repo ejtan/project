@@ -24,7 +24,7 @@ cmd_options::cmd_options(int argc, char **const argv)
     // Hidden input not printed in help message.
     po::options_description hidden;
     hidden.add_options()
-        ("dir", po::value<std::string>(), "Input directory");
+        ("dir", po::value< std::vector<std::string> >(&dirs), "Input directory");
 
     // Take the directory input as a positional parameter
     po::positional_options_description dir_arg;
@@ -113,6 +113,26 @@ bool cmd_options::use_symlinks() const
 double cmd_options::convert_size(double size) const noexcept
 {
     return size / conversion_table.find(prefix_str)->second;
+}
+
+
+/* begin()
+ *
+ * @return: iterator to the beginning of vector<string>
+ */
+cmd_options::iterator cmd_options::begin() noexcept
+{
+    return dirs.begin();
+}
+
+
+/* end()
+ *
+ * @return: iterator to the end of vector<string>
+ */
+cmd_options::iterator cmd_options::end() noexcept
+{
+    return dirs.end();
 }
 
 
