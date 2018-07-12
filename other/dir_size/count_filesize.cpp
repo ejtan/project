@@ -20,7 +20,13 @@ void count_filesize(const cmd_options &opts)
         dir_size = count_all_files(dir_iter);
     }
 
-    fmt::print("{:<{}} {:>n} bytes\n", root.string(), root.string().length() + 5, dir_size);
+    if (auto prefix = opts.get_prefix()) {
+        double new_dir_size = opts.convert_size(static_cast<double>(dir_size));
+        fmt::print("{:<{}} {:>} {}\n", root.string(), root.string().length() + 5,
+                new_dir_size, prefix.value());
+    } else {
+        fmt::print("{:<{}} {:>n} bytes\n", root.string(), root.string().length() + 5, dir_size);
+    } // Choose print message based on if prefix is provided
 }
 
 
