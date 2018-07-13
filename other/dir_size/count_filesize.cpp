@@ -1,4 +1,6 @@
 #include <numeric>
+#include <algorithm>
+#include <string>
 
 #include <fmt/format.h>
 
@@ -9,6 +11,10 @@ namespace fs = std::filesystem;
 
 void count_filesize(const cmd_options &opts)
 {
+    auto largest_dir = std::max_element(opts.begin(), opts.end(),
+            [](const std::string &a, const std::string &b) { return a.size() < b.size(); });
+    int dir_name_space = largest_dir->size() + 5;
+
     for (const auto &dir : opts) {
         std::uintmax_t dir_size;
         fs::path root = dir;
@@ -24,10 +30,10 @@ void count_filesize(const cmd_options &opts)
 
         if (auto prefix = opts.get_prefix()) {
             double new_dir_size = opts.convert_size(static_cast<double>(dir_size));
-            fmt::print("{:<{}} {:>} {}\n", root.string(), root.string().length() + 5,
+            fmt::print("{:<{}} {:>} {}\n", root.string(), dir_name_space,
                     new_dir_size, prefix.value());
         } else {
-            fmt::print("{:<{}} {:>n} bytes\n", root.string(), root.string().length() + 5, dir_size);
+            fmt::print("{:<{}} {:>n} bytes\n", root.string(), dir_name_space, dir_size);
         } // Choose print message based on if prefix is provided
     }
 }
