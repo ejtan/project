@@ -9,24 +9,27 @@ namespace fs = std::filesystem;
 
 void count_filesize(const cmd_options &opts)
 {
-    std::uintmax_t dir_size;
-    fs::path root = opts.get_root_dir();
+    for (const auto &dir : opts) {
+        std::uintmax_t dir_size;
+        fs::path root = dir;
 
-    if (auto max_depth = opts.get_max_depth()) {
-        dir_size = count_max_depth(root, opts.use_symlinks(), max_depth.value());
-    } else {
-        auto dir_iter = (!opts.use_symlinks()) ? fs::recursive_directory_iterator(root) :
-            fs::recursive_directory_iterator(root, fs::directory_options::follow_directory_symlink);
-        dir_size = count_all_files(dir_iter);
+        if (auto max_depth = opts.get_max_depth()) {
+            dir_size = count_max_depth(root, opts.use_symlinks(), max_depth.value());
+        } else {
+            auto dir_iter = (!opts.use_symlinks()) ? fs::recursive_directory_iterator(root) :
+                fs::recursive_directory_iterator(root,
+                        fs::directory_options::follow_directory_symlink);
+            dir_size = count_all_files(dir_iter);
+        }
+
+        if (auto prefix = opts.get_prefix()) {
+            double new_dir_size = opts.convert_size(static_cast<double>(dir_size));
+            fmt::print("{:<{}} {:>} {}\n", root.string(), root.string().length() + 5,
+                    new_dir_size, prefix.value());
+        } else {
+            fmt::print("{:<{}} {:>n} bytes\n", root.string(), root.string().length() + 5, dir_size);
+        } // Choose print message based on if prefix is provided
     }
-
-    if (auto prefix = opts.get_prefix()) {
-        double new_dir_size = opts.convert_size(static_cast<double>(dir_size));
-        fmt::print("{:<{}} {:>} {}\n", root.string(), root.string().length() + 5,
-                new_dir_size, prefix.value());
-    } else {
-        fmt::print("{:<{}} {:>n} bytes\n", root.string(), root.string().length() + 5, dir_size);
-    } // Choose print message based on if prefix is provided
 }
 
 
