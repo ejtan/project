@@ -13,8 +13,8 @@ cmd_options::cmd_options(int argc, char **const argv)
         ("help,h", "Prints help message.")
         ("sym,s", po::bool_switch(&use_symlink), "Allow symbolic links.")
         (",n", "Use nice number output (uses system locale).")
-        (",d", po::value<int>(), "Set max recursion depth allowed")
-        ("prefix,p", po::value<std::string>(&prefix_str),
+        (",d", po::value<int>()->value_name("max_depth") , "Set max recursion depth allowed")
+        ("prefix,p", po::value<std::string>(&prefix_str)->value_name("prefix"),
          "Convert bytes to the corresponding prefix (below).\n"
          "SI Units:            Binary:\n"
          "  kB - 10^3 bytes      KiB - 1024 bytes\n"
