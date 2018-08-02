@@ -127,4 +127,24 @@ typename mpi_vector<T>::const_reference mpi_vector<T>::operator[](size_type pos)
 }
 
 
+/* T* data()
+ * Returns a pointer to the underlying data.
+ */
+template <typename T>
+T* mpi_vector<T>::data() noexcept
+{
+    return arr.data();
+}
+
+
+/* const T* data()
+ * Returns a const pointer to the underlying data.
+ */
+template <typename T>
+const T* mpi_vector<T>::data() const noexcept
+{
+    return arr.data();
+}
+
+
 }; // namespace psrs
