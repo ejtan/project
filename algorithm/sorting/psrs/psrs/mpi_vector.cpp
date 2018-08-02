@@ -103,4 +103,28 @@ void mpi_vector<T>::gather(int root_process)
 }
 
 
+/* reference operator[]
+ * @INPUT: pos = index
+ *
+ * Returns a reference to the position in the vector
+ */
+template <typename T>
+typename mpi_vector<T>::reference mpi_vector<T>::operator[](size_type pos)
+{
+    return arr[pos];
+}
+
+
+/* const_reference operator[]
+ * @INPUT: pos = index
+ *
+ * Returns a const reference to the position in the vector
+ */
+template <typename T>
+typename mpi_vector<T>::const_reference mpi_vector<T>::operator[](size_type pos) const
+{
+    return arr[pos];
+}
+
+
 }; // namespace psrs
