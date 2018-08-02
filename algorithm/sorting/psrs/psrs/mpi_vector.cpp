@@ -1,5 +1,6 @@
 #include <iterator>
 #include <numeric>
+#include <functional>
 #include <boost/mpi/collectives.hpp>
 
 #include "mpi_vector.h"
@@ -174,6 +175,34 @@ template <typename T>
 bool mpi_vector<T>::empty() const noexcept
 {
     return arr.empty();
+}
+
+
+/* size_type total_size()
+ * @INPUT: root_proc = processor to get total size
+ */
+template <typename T>
+typename mpi_vector<T>::size_type mpi_vector<T>::total_size(int root_proc) const
+{
+    int total_n;
+    int n = arr.size();
+    boost::mpi::reduce(comm, n, total_n, std::plus<T>(), root_proc);
+
+    return total_n;
+}
+
+
+/* size_type total_size()
+ * Returns total size to all processors
+ */
+template <typename T>
+typename mpi_vector<T>::size_type mpi_vector<T>::total_size() const
+{
+    int total_n;
+    int n = arr.size();
+    boost::mpi::all_reduce(comm, n, total_n, std::plus<T>());
+
+    return total_n;
 }
 
 
