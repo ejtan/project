@@ -29,7 +29,7 @@ class mpi_vector
         typedef typename std::vector<T>::const_iterator  const_iterator;
 
         // Constructor / assiangment
-        mpi_vector(const boost::mpi::communicator &c) : comm(c) {}
+        mpi_vector(const boost::mpi::communicator &c);
 
         // Communication
         template <typename InputIt>
@@ -71,6 +71,8 @@ class mpi_vector
 
 
 }; // Namespace psrs
+
+#include "mpi_vector.cpp"
 
 
 #endif
