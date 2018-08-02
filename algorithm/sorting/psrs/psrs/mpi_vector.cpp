@@ -167,4 +167,14 @@ const std::vector<T> mpi_vector<T>::get_vector() const noexcept
 }
 
 
+/* bool empty()
+ * Returns true if empty and false otherwise
+ */
+template <typename T>
+bool mpi_vector<T>::empty() const noexcept
+{
+    return arr.empty();
+}
+
+
 }; // namespace psrs
