@@ -1,4 +1,5 @@
 #include <iterator>
+#include <numeric>
 #include <boost/mpi/collectives.hpp>
 
 #include "mpi_vector.h"
@@ -63,6 +64,42 @@ void mpi_vector<T>::distribute(InputIt begin, InputIt end, int root_process)
     } else {
         comm.recv(root_process, psrs::utility::data_tag, arr);
     } // root_process distributes process
+}
+
+
+/* mpi_vector::gather()
+ * @INPUT: root_process = process to gather all data to
+ *
+ * Gathers all vectors spread out amoung procs to root_process.
+ */
+template <typename T>
+void mpi_vector<T>::gather(int root_process)
+{
+    std::vector<int> sizes, disp;
+    int local_n = arr.size();
+
+    // Gather each local processor's vector size to root_process
+    boost::mpi::gather(comm, local_n, sizes, root_process);
+
+    // Generate displacement and count vectors for mpi::gatherv
+    if (comm.rank() == root_process) {
+        // First displacement is always 0.
+        disp.push_back(0);
+        for (int i = 0; i < sizes.size() - 1; ++i)
+            disp.push_back(disp[i] + sizes[i]);
+    }
+
+    // Create temp vector to gather data into
+    int n = std::accumulate(sizes.begin(), sizes.end(), 0);
+    std::vector<T> tmp(n);
+
+    boost::mpi::gatherv(comm, arr, tmp.data(), sizes, disp, root_process);
+
+    // Move tmp vector into arr on root_process and delete arr on other procs
+    if (comm.rank() == root_process)
+        arr = std::move(tmp);
+    else
+        arr.clear();
 }
 
 
