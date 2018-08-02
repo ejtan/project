@@ -147,4 +147,24 @@ const T* mpi_vector<T>::data() const noexcept
 }
 
 
+/* std::vector<T> get_vector()
+ * Returns the vector arr
+ */
+template <typename T>
+std::vector<T> mpi_vector<T>::get_vector() noexcept
+{
+    return arr;
+}
+
+
+/* std::vector<T> get_vector()
+ * Returns const vector
+ */
+template <typename T>
+const std::vector<T> mpi_vector<T>::get_vector() const noexcept
+{
+    return arr;
+}
+
+
 }; // namespace psrs
