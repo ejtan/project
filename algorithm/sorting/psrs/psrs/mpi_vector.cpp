@@ -206,4 +206,14 @@ typename mpi_vector<T>::size_type mpi_vector<T>::total_size() const
 }
 
 
+/* reserve()
+ * @INPUT: new_size = numer of elements to reserve
+ */
+template <typename T>
+void mpi_vector<T>::reserve(size_type new_size)
+{
+    arr.reserve(new_size);
+}
+
+
 }; // namespace psrs
