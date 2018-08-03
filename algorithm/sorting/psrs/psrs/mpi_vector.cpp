@@ -216,4 +216,63 @@ void mpi_vector<T>::reserve(size_type new_size)
 }
 
 
+/* begin()
+ * Returns begin iterator
+ */
+template <typename T>
+typename mpi_vector<T>::iterator mpi_vector<T>::begin() noexcept
+{
+    return arr.begin();
+}
+
+
+/* begin()
+ * Returns begin const iterator
+ */
+template <typename T>
+typename mpi_vector<T>::const_iterator mpi_vector<T>::begin() const noexcept
+{
+    return arr.cbegin();
+}
+
+
+/* cbegin()
+ * Returns begin const iterator
+ */
+template <typename T>
+typename mpi_vector<T>::const_iterator mpi_vector<T>::cbegin() const noexcept
+{
+    return arr.cbegin();
+}
+
+
+/* end()
+ * Returns end iterator
+ */
+template <typename T>
+typename mpi_vector<T>::iterator mpi_vector<T>::end() noexcept
+{
+    return arr.end();
+}
+
+/* end()
+ * Returns end const iterator
+ */
+template <typename T>
+typename mpi_vector<T>::const_iterator mpi_vector<T>::end() const noexcept
+{
+    return arr.cend();
+}
+
+
+/* cend()
+ * Returns end const iterator
+ */
+template <typename T>
+typename mpi_vector<T>::const_iterator mpi_vector<T>::cend() const noexcept
+{
+    return arr.cend();
+}
+
+
 }; // namespace psrs
