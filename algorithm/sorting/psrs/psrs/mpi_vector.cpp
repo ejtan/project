@@ -104,6 +104,16 @@ void mpi_vector<T>::gather(int root_process)
 }
 
 
+/* clear()
+ * Clears proc's vector
+ */
+template <typename T>
+void mpi_vector<T>::clear() noexcept
+{
+    arr.clear();
+}
+
+
 /* reference operator[]
  * @INPUT: pos = index
  *
