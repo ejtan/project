@@ -114,6 +114,19 @@ void mpi_vector<T>::clear() noexcept
 }
 
 
+/* insert()
+ * @INPUT: pos = iterator position to insert
+ * @INPUT: begin, end = range of iterators to insert
+ */
+template <typename T>
+template <typename InputIt>
+typename mpi_vector<T>::iterator mpi_vector<T>::insert(const_iterator pos,
+        InputIt begin, InputIt end)
+{
+    return arr.insert(pos, begin, end);
+}
+
+
 /* reference operator[]
  * @INPUT: pos = index
  *
