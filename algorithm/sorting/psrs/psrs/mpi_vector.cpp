@@ -229,6 +229,16 @@ typename mpi_vector<T>::size_type mpi_vector<T>::total_size() const
 }
 
 
+/* size_type size()
+ * Returns the size of the proc's vector
+ */
+template <typename T>
+typename mpi_vector<T>::size_type mpi_vector<T>::size() const noexcept
+{
+    return arr.size();
+}
+
+
 /* reserve()
  * @INPUT: new_size = numer of elements to reserve
  */
