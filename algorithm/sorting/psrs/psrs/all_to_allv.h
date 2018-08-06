@@ -56,7 +56,7 @@ inline void all_to_allv(const boost::mpi::communicator &comm, const std::vector<
 
     if constexpr(boost::mpi::is_mpi_datatype<T>())
         detail::all_to_allv_mpi_type_impl(comm, &in_values[0], in_count.data(), in_disp.data(),
-            &out_values[0], out_count.data(), out_count.data());
+            &out_values[0], out_count.data(), out_disp.data());
 }
 
 
