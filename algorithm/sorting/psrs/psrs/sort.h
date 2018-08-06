@@ -13,6 +13,7 @@
 #include <boost/mpi/collectives.hpp>
 
 #include "mpi_vector.h"
+#include "all_to_allv.h"
 
 
 namespace psrs {
@@ -70,11 +71,8 @@ void sort_mpi_type_impl(const boost::mpi::communicator &comm, psrs::mpi_vector<T
     // Create temp vector to contain data.
     std::vector<T> tmp;
 
-    // Perform an all to all data swap. Use of MPI_Alltoallv needed since
-    // boost::mpi doesn't implament it
-    MPI_Datatype dtype = boost::mpi::get_mpi_datatype<T>(*data.data());
-    MPI_Alltoallv(data.data(), send_cnt.data(), send_disp.data(), dtype, &tmp[0], recv_cnt.data(),
-            recv_disp.data(), dtype, comm);
+    // Perform an all to all data swap.
+    psrs::mpi::all_to_allv(comm, data.get_vector(), send_cnt, send_disp, tmp, recv_cnt, recv_disp);
 
     // Perform final sort of data
     std::sort(tmp.begin(), tmp.end());
