@@ -1,4 +1,7 @@
 #include <iostream>
+#include <random>
+#include <algorithm>
+#include <cstdlib>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 
@@ -6,24 +9,36 @@
 #include "psrs/sort.h"
 
 
-int main()
+int main(int argc, char **argv)
 {
-    boost::mpi::environment env;
+    boost::mpi::environment env(argc, argv);
     boost::mpi::communicator world;
 
-    std::vector<int> data;
-    psrs::mpi_vector<int> v(world);
+    // Get vector size (default 100)
+    int N;
 
-    if (world.rank() == 0)
-        data = {15, 46, 48, 93, 39,  6, 72, 91, 14,
-                36, 69, 40, 89, 61, 97, 12, 21, 54,
-                53, 97, 84, 58, 32, 27, 33, 72, 20};
+    if (argc == 2)
+        N = atoi(argv[1]);
+    else
+        N = 100;
+
+    std::vector<double> data;
+    psrs::mpi_vector<double> v(world);
+
+    if (world.rank() == 0) {
+        std::random_device rd;
+        std::mt19937 engine(rd());
+        std::uniform_real_distribution<double> range(-100.0, 100.0);
+
+        data.resize(N);
+        std::generate(data.begin(), data.end(),
+                [&range, &engine]()->double { return range(engine); });
+    } // Generate data
 
     v.distribute(data.begin(), data.end(), 0);
 
     psrs::sort(world, v);
 
-    world.barrier();
     v.gather(0);
 
     if (!world.rank()) {
