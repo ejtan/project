@@ -93,6 +93,12 @@ void sort_mpi_type_impl(const boost::mpi::communicator &comm, psrs::mpi_vector<T
 template <typename T>
 void sort(const boost::mpi::communicator &comm, psrs::mpi_vector<T> &data)
 {
+    // Special case: single proc
+    if (comm.size() == 1) {
+        std::sort(data.begin(), data.end());
+        return;
+    }
+
     // Only built in types currently suppoted
     if (!boost::mpi::is_mpi_datatype<T>())
         throw std::runtime_error("Error: Expected built in MPI type. Other types not supported.");

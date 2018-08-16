@@ -30,6 +30,12 @@ template <typename T>
 template <typename InputIt>
 void mpi_vector<T>::distribute(InputIt begin, InputIt end, int root_process)
 {
+    // Special case: 1 proc
+    if (comm.size() == 1) {
+        arr.insert(arr.begin(), begin, end);
+        return;
+    }
+
     int n;
 
     // Compute the number of elements and distribute to all procs
@@ -76,6 +82,10 @@ void mpi_vector<T>::distribute(InputIt begin, InputIt end, int root_process)
 template <typename T>
 void mpi_vector<T>::gather(int root_process)
 {
+    // Special case: 1 processor
+    if (comm.size() == 1)
+        return;
+
     std::vector<int> sizes, disp;
     int local_n = arr.size();
 
