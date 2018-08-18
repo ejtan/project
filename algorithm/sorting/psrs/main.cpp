@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
+#include <boost/mpi/timer.hpp>
 
 #include "psrs/mpi_vector.h"
 #include "psrs/sort.h"
@@ -37,7 +38,12 @@ int main(int argc, char **argv)
 
     v.distribute(data.begin(), data.end(), 0);
 
+    boost::mpi::timer sort_timer;
     psrs::sort(world, v);
+    double elapsed_time = sort_timer.elapsed();
+
+    if (!world.rank())
+        std::cout << "Sort time: " << elapsed_time << "s\n";
 
     v.gather(0);
 
