@@ -29,6 +29,7 @@ class mpi_vector
         typedef typename std::vector<T>::const_iterator  const_iterator;
 
         // Constructor / assiangment
+        mpi_vector();
         mpi_vector(const boost::mpi::communicator &c);
         mpi_vector<T>& operator=(const mpi_vector &rhs);
 

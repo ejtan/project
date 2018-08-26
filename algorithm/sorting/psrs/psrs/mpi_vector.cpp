@@ -11,6 +11,16 @@ namespace psrs {
 
 
 /* mpi_vector::mpi_vector() constructor
+ *
+ * Constructs object with default communicator from boost::mpi::communicator (MPI_COMM_WORLD)
+ */
+template <typename T>
+mpi_vector<T>::mpi_vector()
+{
+}
+
+
+/* mpi_vector::mpi_vector() constructor
  * @INPUT: c = communciator to copy
  */
 template <typename T>
