@@ -30,6 +30,7 @@ class mpi_vector
 
         // Constructor / assiangment
         mpi_vector(const boost::mpi::communicator &c);
+        mpi_vector<T>& operator=(const mpi_vector &rhs);
 
         // Communication
         template <typename InputIt>

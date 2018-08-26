@@ -19,6 +19,23 @@ mpi_vector<T>::mpi_vector(const boost::mpi::communicator &c) : comm(c)
 }
 
 
+/* mpi_vector& operator=
+ * @INPUT: rhs = vector to copy into this object.
+ */
+template <typename T>
+mpi_vector<T>& mpi_vector<T>::operator=(const mpi_vector<T> &rhs)
+{
+    // Quick return if rhs is the same object as lhs
+    if (this == &rhs)
+        return *this;
+
+    comm = rhs.comm;
+    arr = rhs.arr;
+
+    return *this;
+}
+
+
 /* void mpi_vector::distribute
  * @INPUT: begin, end = pair of iterators representing the range to copy from
  * @INPUT root_process = process containing to pair of iterators
