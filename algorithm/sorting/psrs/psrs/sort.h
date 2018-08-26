@@ -6,6 +6,7 @@
 #define SORT_H
 
 #include <vector>
+#include <functional>
 #include <stdexcept>
 #include <mpi.h>
 
@@ -20,11 +21,12 @@ namespace psrs {
 namespace detail {
 
 
-template <typename T>
-void sort_mpi_type_impl(const boost::mpi::communicator &comm, psrs::mpi_vector<T> &data)
+template <typename T, class Compare>
+void sort_mpi_type_impl(const boost::mpi::communicator &comm,
+        psrs::mpi_vector<T> &data, Compare cmp)
 {
     // Sort each proc's data
-    std::sort(data.begin(), data.end());
+    std::sort(data.begin(), data.end(), cmp);
 
     // Get samples
     std::vector<T> local_samples;
@@ -41,7 +43,7 @@ void sort_mpi_type_impl(const boost::mpi::communicator &comm, psrs::mpi_vector<T
     // Sort samples and determine pivots on proc 0. The broadecast pivots to all procs
     std::vector<T> pivots;
     if (!comm.rank()) {
-        std::sort(samples.begin(), samples.end());
+        std::sort(samples.begin(), samples.end(), cmp);
         for (int i = p + (p / 2) - 1; i <= (p - 1) * p + (p / 2); i += p)
             pivots.push_back(samples[i]);
     }
@@ -53,7 +55,7 @@ void sort_mpi_type_impl(const boost::mpi::communicator &comm, psrs::mpi_vector<T
 
     send_disp.push_back(0);
     for (const auto &piv : pivots) {
-        auto it = std::lower_bound(data.begin(), data.end(), piv);
+        auto it = std::lower_bound(data.begin(), data.end(), piv, cmp);
         send_disp.push_back(static_cast<int>(std::distance(data.begin(), it)));
     }
 
@@ -75,7 +77,7 @@ void sort_mpi_type_impl(const boost::mpi::communicator &comm, psrs::mpi_vector<T
     psrs::mpi::all_to_allv(comm, data.get_vector(), send_cnt, send_disp, tmp, recv_cnt, recv_disp);
 
     // Perform final sort of data
-    std::sort(tmp.begin(), tmp.end());
+    std::sort(tmp.begin(), tmp.end(), cmp);
 
     // Insert data into each proc's vector
     data.clear();
@@ -89,6 +91,8 @@ void sort_mpi_type_impl(const boost::mpi::communicator &comm, psrs::mpi_vector<T
 /* sort()
  * @INPUT: comm = communicator
  * @INPUT: data = data to sort
+ *
+ * Sort with default comparator operator<.
  */
 template <typename T>
 void sort(const boost::mpi::communicator &comm, psrs::mpi_vector<T> &data)
@@ -103,7 +107,31 @@ void sort(const boost::mpi::communicator &comm, psrs::mpi_vector<T> &data)
     if (!boost::mpi::is_mpi_datatype<T>())
         throw std::runtime_error("Error: Expected built in MPI type. Other types not supported.");
 
-    detail::sort_mpi_type_impl(comm, data);
+    detail::sort_mpi_type_impl(comm, data, std::less<T>());
+}
+
+
+/* sort()
+ * @INPUT: comm = communicator
+ * @INPUT: data = data to sort
+ * @INPUT: cmp = comparator for sorting. Default to std::less<T>
+ *
+ * Sort with callable comparator cmp.
+ */
+template <typename T, class Compare>
+void sort(const boost::mpi::communicator &comm, psrs::mpi_vector<T> &data, Compare cmp)
+{
+    // Special case: single proc
+    if (comm.size() == 1) {
+        std::sort(data.begin(), data.end(), cmp);
+        return;
+    }
+
+    // Only built in types currently suppoted
+    if (!boost::mpi::is_mpi_datatype<T>())
+        throw std::runtime_error("Error: Expected built in MPI type. Other types not supported.");
+
+    detail::sort_mpi_type_impl(comm, data, cmp);
 }
 
 
