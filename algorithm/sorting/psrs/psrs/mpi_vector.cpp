@@ -29,6 +29,15 @@ mpi_vector<T>::mpi_vector(const boost::mpi::communicator &c) : comm(c)
 }
 
 
+/* mpi_vector::mpi_vector() copy constructor
+ * @INPUT: other = mpi_vector to copy
+ */
+template <typename T>
+mpi_vector<T>::mpi_vector(const mpi_vector &other) : comm(other.comm), arr(other.arr)
+{
+}
+
+
 /* mpi_vector& operator=
  * @INPUT: rhs = vector to copy into this object.
  */

@@ -31,6 +31,7 @@ class mpi_vector
         // Constructor / assiangment
         mpi_vector();
         mpi_vector(const boost::mpi::communicator &c);
+        mpi_vector(const mpi_vector &other);
         mpi_vector<T>& operator=(const mpi_vector &rhs);
 
         // Communication
