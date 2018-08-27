@@ -246,7 +246,7 @@ typename mpi_vector<T>::size_type mpi_vector<T>::total_size(int root_proc) const
 {
     int total_n;
     int n = arr.size();
-    boost::mpi::reduce(comm, n, total_n, std::plus<T>(), root_proc);
+    boost::mpi::reduce(comm, n, total_n, std::plus<int>(), root_proc);
 
     return total_n;
 }
@@ -260,7 +260,7 @@ typename mpi_vector<T>::size_type mpi_vector<T>::total_size() const
 {
     int total_n;
     int n = arr.size();
-    boost::mpi::all_reduce(comm, n, total_n, std::plus<T>());
+    boost::mpi::all_reduce(comm, n, total_n, std::plus<int>());
 
     return total_n;
 }
