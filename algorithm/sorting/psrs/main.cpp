@@ -1,7 +1,9 @@
 #include <iostream>
 #include <random>
+#include <functional>
 #include <algorithm>
 #include <cstdlib>
+
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/timer.hpp>
@@ -10,6 +12,15 @@
 #include "psrs/sort.h"
 
 
+/*-------------------------------------------------------------------------------------------------
+ * FORWARD DECLARATIONS
+ *-----------------------------------------------------------------------------------------------*/
+void test_double(const boost::mpi::communicator &comm, int N);
+
+
+/*-------------------------------------------------------------------------------------------------
+ * MAIN
+ *-----------------------------------------------------------------------------------------------*/
 int main(int argc, char **argv)
 {
     boost::mpi::environment env(argc, argv);
@@ -23,10 +34,18 @@ int main(int argc, char **argv)
     else
         N = 100;
 
-    std::vector<double> data;
-    psrs::mpi_vector<double> v(world);
+    test_double(world, N);
+}
 
-    if (world.rank() == 0) {
+
+/*-------------------------------------------------------------------------------------------------
+ * FUNCTIONS
+ *-----------------------------------------------------------------------------------------------*/
+void test_double(const boost::mpi::communicator &comm, int N)
+{
+    std::vector<double> data;
+
+    if (!comm.rank()) {
         std::random_device rd;
         std::mt19937 engine(rd());
         std::uniform_real_distribution<double> range(-100.0, 100.0);
@@ -34,23 +53,30 @@ int main(int argc, char **argv)
         data.resize(N);
         std::generate(data.begin(), data.end(),
                 [&range, &engine]()->double { return range(engine); });
-    } // Generate data
+    } // Generate data on proc 0
 
+    psrs::mpi_vector<double> v;
     v.distribute(data.begin(), data.end(), 0);
 
+    psrs::mpi_vector<double> v_reverse(v);
+
+    // Time sort with default compare
     boost::mpi::timer sort_timer;
-    psrs::sort(world, v);
+    psrs::sort(v.get_comm(), v);
     double elapsed_time = sort_timer.elapsed();
-
-    if (!world.rank())
-        std::cout << "Sort time: " << elapsed_time << "s\n";
-
     v.gather(0);
 
-    if (!world.rank()) {
-        if (std::is_sorted(v.begin(), v.end()))
-            std::cout << "Sorted correctly" << std::endl;
-        else
-            std::cout << "Not sorted" << std::endl;
+    // Time sort with std::greater compare
+    boost::mpi::timer reverse_sort_time;
+    psrs::sort(v_reverse.get_comm(), v_reverse, std::greater<double>());
+    double reverse_elapsed_time = reverse_sort_time.elapsed();
+    v_reverse.gather(0);
+
+    if (!comm.rank()) {
+        std::cout << "Normal Sort time: " << elapsed_time << "s : ";
+        std::cout << (std::is_sorted(v.begin(), v.end()) ? "Sorted correctly\n" : "Not sorted\n");
+        std::cout << "Reverse Sort time: " << reverse_elapsed_time << "s : ";
+        std::cout << (std::is_sorted(v_reverse.begin(), v_reverse.end(), std::greater<double>()) ?
+                "Sorted correctly\n" : "Not sorted\n");
     }
 }
