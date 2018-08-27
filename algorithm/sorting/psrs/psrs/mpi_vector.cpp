@@ -228,6 +228,16 @@ const std::vector<T> mpi_vector<T>::get_vector() const noexcept
 }
 
 
+/* boost::mpi::communicator get_comm()
+ * Returns const boost::mpi::communicator
+ */
+template <typename T>
+const boost::mpi::communicator mpi_vector<T>::get_comm() const noexcept
+{
+    return comm;
+}
+
+
 /* bool empty()
  * Returns true if empty and false otherwise
  */

@@ -43,13 +43,14 @@ class mpi_vector
         template <typename InputIt>
             iterator insert(const_iterator pos, InputIt begin, InputIt end);
 
-        // Element / data access
+        // Element / data access / communicator access
         reference operator[](size_type pos);
         const_reference operator[](size_type pos) const;
         T* data() noexcept;
         const T* data() const noexcept;
         std::vector<T> get_vector() noexcept;
         const std::vector<T> get_vector() const noexcept;
+        const boost::mpi::communicator get_comm() const noexcept;
 
         // Capacity
         bool empty()const noexcept;
