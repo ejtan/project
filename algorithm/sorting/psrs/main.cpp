@@ -16,6 +16,10 @@
  * FORWARD DECLARATIONS
  *-----------------------------------------------------------------------------------------------*/
 void test_double(const boost::mpi::communicator &comm, int N);
+template <typename T>
+double time_sort(psrs::mpi_vector<T> &v);
+template <typename T, class Compare>
+double time_sort(psrs::mpi_vector<T> &v, Compare cmp);
 
 
 /*-------------------------------------------------------------------------------------------------
@@ -61,15 +65,11 @@ void test_double(const boost::mpi::communicator &comm, int N)
     psrs::mpi_vector<double> v_reverse(v);
 
     // Time sort with default compare
-    boost::mpi::timer sort_timer;
-    psrs::sort(v.get_comm(), v);
-    double elapsed_time = sort_timer.elapsed();
+    double elapsed_time = time_sort(v);
     v.gather(0);
 
     // Time sort with std::greater compare
-    boost::mpi::timer reverse_sort_time;
-    psrs::sort(v_reverse.get_comm(), v_reverse, std::greater<double>());
-    double reverse_elapsed_time = reverse_sort_time.elapsed();
+    double reverse_elapsed_time = time_sort(v_reverse, std::greater<double>());
     v_reverse.gather(0);
 
     if (!comm.rank()) {
@@ -79,4 +79,24 @@ void test_double(const boost::mpi::communicator &comm, int N)
         std::cout << (std::is_sorted(v_reverse.begin(), v_reverse.end(), std::greater<double>()) ?
                 "Sorted correctly\n" : "Not sorted\n");
     }
+}
+
+
+template <typename T>
+double time_sort(psrs::mpi_vector<T> &v)
+{
+    boost::mpi::timer sort_timer;
+    psrs::sort(v.get_comm(), v);
+
+    return sort_timer.elapsed();
+}
+
+
+template <typename T, class Compare>
+double time_sort(psrs::mpi_vector<T> &v, Compare cmp)
+{
+    boost::mpi::timer sort_timer;
+    psrs::sort(v.get_comm(), v, cmp);
+
+    return sort_timer.elapsed();
 }
