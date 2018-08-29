@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iterator>
 #include <numeric>
 #include <functional>
@@ -13,8 +14,7 @@ namespace psrs {
 /* mpi_vector::mpi_vector() constructor
  *
  * Constructs object with default communicator from boost::mpi::communicator (MPI_COMM_WORLD)
- */
-template <typename T>
+ */ template <typename T>
 mpi_vector<T>::mpi_vector()
 {
 }
@@ -361,6 +361,59 @@ template <typename T>
 typename mpi_vector<T>::const_iterator mpi_vector<T>::cend() const noexcept
 {
     return arr.cend();
+}
+
+
+/* read_file
+ */
+template <typename T>
+void mpi_vector<T>::read_file(const std::string &filepath)
+{
+    int p = comm.size();
+    int id = comm.rank();
+    int n = 0;
+    std::ifstream in_file;
+
+    if (id == (p-1)) {
+        in_file.open(filepath);
+
+        // Compute number of elements by going through the number of lines.
+        std::string dummy_line;
+        while (std::getline(in_file, dummy_line))
+            n++;
+
+        // Reset to beginning of file
+        in_file.clear();
+        in_file.seekg(0, std::ios::beg);
+    } // Proc p-1 opens the file and gets line size
+
+    // Broadcast n to all procs
+    boost::mpi::broadcast(comm, n, p-1);
+
+    int local_n = utility::blk_size(id, p, n);
+
+    if (id == (p-1)) {
+        // Resize proc p-1 as a buffer since it contains the largest possiable number of elements
+        arr.resize(local_n);
+
+        for (int i = 0; i < p; i++) {
+            for (int j = 0; j < utility::blk_size(i, p, n); j++)
+                in_file >> arr[j];
+
+            if (i != p-1) {
+                comm.send(i, utility::data_tag, arr);
+            } // Send data if proc is not the last one
+        } //Loop over procs
+    } else {
+        comm.recv(p-1, utility::data_tag, arr);
+
+        // Resize to local_n to clear any un needed elements since each proc's arr is now the same
+        // as arr on proc p-1
+        arr.resize(local_n);
+    } // Proc p-1 distriubtes data to all other processors
+
+    if (in_file.is_open())
+        in_file.close();
 }
 
 

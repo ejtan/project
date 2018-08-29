@@ -68,6 +68,9 @@ class mpi_vector
         const_iterator end() const noexcept;
         const_iterator cend() const noexcept;
 
+        // Other
+        void read_file(const std::string &filepath);
+
     private:
         boost::mpi::communicator comm;
         std::vector<T> arr;
