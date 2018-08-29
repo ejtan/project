@@ -31,12 +31,7 @@ int main(int argc, char **argv)
     boost::mpi::communicator world;
 
     // Get vector size (default 100)
-    int N;
-
-    if (argc == 2)
-        N = atoi(argv[1]);
-    else
-        N = 100;
+    int N = (argc == 2) ? atoi(argv[1]) : 100;
 
     test_double(world, N);
 }
