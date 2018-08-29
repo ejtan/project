@@ -103,10 +103,6 @@ void sort(const boost::mpi::communicator &comm, psrs::mpi_vector<T> &data)
         return;
     }
 
-    // Only built in types currently suppoted
-    if (!boost::mpi::is_mpi_datatype<T>())
-        throw std::runtime_error("Error: Expected built in MPI type. Other types not supported.");
-
     detail::sort_mpi_type_impl(comm, data, std::less<T>());
 }
 
@@ -126,10 +122,6 @@ void sort(const boost::mpi::communicator &comm, psrs::mpi_vector<T> &data, Compa
         std::sort(data.begin(), data.end(), cmp);
         return;
     }
-
-    // Only built in types currently suppoted
-    if (!boost::mpi::is_mpi_datatype<T>())
-        throw std::runtime_error("Error: Expected built in MPI type. Other types not supported.");
 
     detail::sort_mpi_type_impl(comm, data, cmp);
 }
