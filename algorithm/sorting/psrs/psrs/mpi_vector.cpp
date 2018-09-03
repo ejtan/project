@@ -150,6 +150,39 @@ void mpi_vector<T>::gather(int root_process)
 }
 
 
+/* scatter()
+ * Gathers all data into proc 0 and scatters evenlly among all processors. Makes no
+ * assumption about how the data is distributed, so all data is gathered into one
+ * proc and distributed.
+ */
+template <typename T>
+void mpi_vector<T>::scatter()
+{
+    // Gather all data into proc 0.
+    gather(0);
+
+    int p = comm.size();
+    int id = comm.rank();
+    int n = total_size();
+    std::vector<int> send_count(p), send_disp(p);
+
+    send_count[0] = utility::blk_size(0, p, n);
+    send_disp[0] = 0;
+    for (int i = 1; i < p; i++) {
+        send_disp[i] = send_disp[i - 1] + send_count[i - 1];
+        send_count[i] = utility::blk_size(i, p, n);
+    }
+
+    int local_n = utility::blk_size(id, p, n);
+
+    T *tmp = new T[local_n];
+
+    boost::mpi::scatterv(comm, arr, send_count, send_disp, tmp, local_n, 0);
+    arr.clear();
+    arr.insert(arr.begin(), tmp, tmp + local_n);
+}
+
+
 /* clear()
  * Clears proc's vector
  */

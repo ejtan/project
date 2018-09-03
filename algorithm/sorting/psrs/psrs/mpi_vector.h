@@ -38,6 +38,7 @@ class mpi_vector
         template <typename InputIt>
             void distribute(InputIt begin, InputIt end, int root_process);
         void gather(int root_process);
+        void scatter();
 
         // Modify
         void clear() noexcept;
