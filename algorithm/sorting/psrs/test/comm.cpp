@@ -65,7 +65,7 @@ void test_int(const mpi::communicator &comm)
 
     // Test size of distributed vector
     if (local_n != v.size())
-        throw std::runtime_error("Error: distrubite().\n"
+        throw std::runtime_error("Error: distrubite() in test_int().\n"
                 "Expected local_n and v.size() to be equal on proc " + std::to_string(id) + ".\n" +
                 "local_n = " + std::to_string(local_n) + " v.size() = " + std::to_string(v.size()));
 
@@ -74,7 +74,7 @@ void test_int(const mpi::communicator &comm)
 
     // Test vector data
     if (!std::equal(data.begin() + start, data.begin() + end, v.begin()))
-        throw std::runtime_error("Error: distribute().\nExpected proc " +
+        throw std::runtime_error("Error: distribute() in test_int().\nExpected proc " +
                 std::to_string(id) + " data section [" + std::to_string(start) + ", " +
                 std::to_string(end) + ") to be equal.");
 
@@ -88,19 +88,20 @@ void test_int(const mpi::communicator &comm)
     // Test gather data to proc 0
     if (!id)
         if (!std::equal(data.begin(), data.end(), v.begin()))
-            throw std::runtime_error("Error: gather().\nExpected data to be equal on proc 0.");
+            throw std::runtime_error("Error: gather() in test_int().\n"
+                    "Expected data to be equal on proc 0.");
 
     v.scatter();
 
     // Test scatter size
     if (local_n != v.size())
-        throw std::runtime_error("Error: scatter().\n"
+        throw std::runtime_error("Error: scatter() in test_int().\n"
                 "Expected local_n and v.size() to be equal on proc " + std::to_string(id) + ".\n" +
                 "local_n = " + std::to_string(local_n) + " v.size() = " + std::to_string(v.size()));
 
     // Test scatter data
     if (!std::equal(v.begin(), v.end(), v_tmp.begin()))
-        throw std::runtime_error("Error: scatter().\n"
+        throw std::runtime_error("Error: scatter() in test_int().\n"
                 "Expected data to be equally scattered on proc " + std::to_string(id) + '.');
 }
 
@@ -120,7 +121,7 @@ void test_string(const mpi::communicator &comm)
 
     // Test size of distributed vector
     if (local_n != v.size())
-        throw std::runtime_error("Error: distrubite() in test_string.\n"
+        throw std::runtime_error("Error: distrubite() in test_string().\n"
                 "Expected local_n and v.size() to be equal on proc " + std::to_string(id) + ".\n" +
                 "local_n = " + std::to_string(local_n) + " v.size() = " + std::to_string(v.size()));
 
@@ -129,7 +130,7 @@ void test_string(const mpi::communicator &comm)
 
     // Test vector data
     if (!std::equal(data.begin() + start, data.begin() + end, v.begin()))
-        throw std::runtime_error("Error: distribute().\nExpected proc " +
+        throw std::runtime_error("Error: distribute() in test_string().\nExpected proc " +
                 std::to_string(id) + " data section [" + std::to_string(start) + ", " +
                 std::to_string(end) + ") to be equal.");
 
@@ -143,18 +144,19 @@ void test_string(const mpi::communicator &comm)
     // Test gather data to proc 0
     if (!id)
         if (!std::equal(data.begin(), data.end(), v.begin()))
-            throw std::runtime_error("Error: gather().\nExpected data to be equal on proc 0.");
+            throw std::runtime_error("Error: gather() in test_string()\n"
+                    "Expected data to be equal on proc 0.");
 
     v.scatter();
 
     // Test scatter size
     if (local_n != v.size())
-        throw std::runtime_error("Error: scatter().\n"
+        throw std::runtime_error("Error: scatter() in test_string().\n"
                 "Expected local_n and v.size() to be equal on proc " + std::to_string(id) + ".\n" +
                 "local_n = " + std::to_string(local_n) + " v.size() = " + std::to_string(v.size()));
 
     // Test scatter data
     if (!std::equal(v.begin(), v.end(), v_tmp.begin()))
-        throw std::runtime_error("Error: scatter().\n"
+        throw std::runtime_error("Error: scatter() in test_string().\n"
                 "Expected data to be equally scattered on proc " + std::to_string(id) + '.');
 }
