@@ -71,11 +71,13 @@ void test_double(const boost::mpi::communicator &comm, int N)
     v_reverse.gather(0);
 
     if (!comm.rank()) {
+        std::cout << "Test double:\n";
         std::cout << "Normal Sort time: " << elapsed_time << "s : ";
         std::cout << (std::is_sorted(v.begin(), v.end()) ? "Sorted correctly\n" : "Not sorted\n");
         std::cout << "Reverse Sort time: " << reverse_elapsed_time << "s : ";
         std::cout << (std::is_sorted(v_reverse.begin(), v_reverse.end(), std::greater<double>()) ?
                 "Sorted correctly\n" : "Not sorted\n");
+        std::cout << std::endl;
     }
 }
 
@@ -99,8 +101,10 @@ void test_string(const boost::mpi::communicator &comm)
     data.gather(0);
 
     if (!comm.rank()) {
+        std::cout << "Test string\n";
         std::cout << "Normal sort time: " << elapsed_time << "s : " <<
             (std::is_sorted(data.begin(), data.end()) ? "Sorted correctly\n" : "Not sorted\n");
+        std::cout << std::endl;
     }
 }
 
