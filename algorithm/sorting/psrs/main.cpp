@@ -120,7 +120,7 @@ void test_string(const boost::mpi::communicator &comm)
             (std::is_sorted(data.begin(), data.end()) ? "Sorted correctly\n" : "Not sorted\n");
         std::cout << "Reverse sort time: " << reverse_elapsed_time << "s : " <<
             (std::is_sorted(reverse_data.begin(), reverse_data.end(), std::greater<std::string>()) ?
-                "Sorted correcctly\n" : "Not sorted\n");
+                "Sorted correctly\n" : "Not sorted\n");
         std::cout << "Case insensitive sort time: " << case_insensitive_time << "s : " <<
             (std::is_sorted(case_insensitive_data.begin(), case_insensitive_data.end(),
                             case_insensitive_cmp) ? "Sorted correctly\n" : "Not sorted\n");
