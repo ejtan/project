@@ -58,8 +58,7 @@ void test_double(const boost::mpi::communicator &comm, int N)
                 [&range, &engine]()->double { return range(engine); });
     } // Generate data on proc 0
 
-    psrs::mpi_vector<double> v;
-    v.distribute(data.begin(), data.end(), 0);
+    psrs::mpi_vector<double> v(comm, data.begin(), data.end(), 0);
 
     psrs::mpi_vector<double> v_reverse(v);
 
