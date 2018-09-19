@@ -51,6 +51,7 @@ mpi_vector<T>& mpi_vector<T>::operator=(const mpi_vector<T> &rhs)
 
     comm = rhs.comm;
     arr = rhs.arr;
+    is_gathered = rhs.is_gathered;
 
     return *this;
 }
@@ -123,6 +124,10 @@ void mpi_vector<T>::gather(int root_process)
     if (comm.size() == 1)
         return;
 
+    // Check if data is gathered on on processor
+    if (is_gathered)
+        return;
+
     std::vector<int> sizes, disp;
     int local_n = arr.size();
 
@@ -148,6 +153,9 @@ void mpi_vector<T>::gather(int root_process)
         arr = std::move(tmp);
     else
         arr.clear();
+
+    // Set is_gathered to the proc which all data resides in
+    is_gathered = root_process;
 }
 
 
@@ -159,8 +167,14 @@ void mpi_vector<T>::gather(int root_process)
 template <typename T>
 void mpi_vector<T>::scatter()
 {
-    // Gather all data into proc 0.
-    gather(0);
+    int root_proc;
+
+    if (is_gathered) {
+        root_proc = is_gathered.value();
+    } else {
+        root_proc = 0;
+        gather(0);
+    }
 
     int p = comm.size();
     int id = comm.rank();
@@ -178,7 +192,7 @@ void mpi_vector<T>::scatter()
 
     T *tmp = new T[local_n];
 
-    boost::mpi::scatterv(comm, arr, send_count, send_disp, tmp, local_n, 0);
+    boost::mpi::scatterv(comm, arr, send_count, send_disp, tmp, local_n, root_proc);
     arr.clear();
     arr.insert(arr.begin(), tmp, tmp + local_n);
 }

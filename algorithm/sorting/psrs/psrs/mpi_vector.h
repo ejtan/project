@@ -2,6 +2,7 @@
 #define MPI_VECTOR_H
 
 #include <vector>
+#include <optional>
 
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
@@ -75,6 +76,7 @@ class mpi_vector
     private:
         boost::mpi::communicator comm;
         std::vector<T> arr;
+        std::optional<int> is_gathered;
 };
 
 
