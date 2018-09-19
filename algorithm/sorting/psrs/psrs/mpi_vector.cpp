@@ -195,6 +195,8 @@ void mpi_vector<T>::scatter()
     boost::mpi::scatterv(comm, arr, send_count, send_disp, tmp, local_n, root_proc);
     arr.clear();
     arr.insert(arr.begin(), tmp, tmp + local_n);
+
+    delete[] tmp;
 }
 
 
