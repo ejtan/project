@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <random>
 #include <functional>
 #include <algorithm>
@@ -16,6 +17,7 @@
  * FORWARD DECLARATIONS
  *-----------------------------------------------------------------------------------------------*/
 void test_double(const boost::mpi::communicator &comm, int N);
+void test_string(const boost::mpi::communicator &comm);
 template <typename T>
 double time_sort(psrs::mpi_vector<T> &v);
 template <typename T, class Compare>
@@ -34,6 +36,7 @@ int main(int argc, char **argv)
     int N = (argc == 2) ? atoi(argv[1]) : 100;
 
     test_double(world, N);
+    test_string(world);
 }
 
 
@@ -73,6 +76,31 @@ void test_double(const boost::mpi::communicator &comm, int N)
         std::cout << "Reverse Sort time: " << reverse_elapsed_time << "s : ";
         std::cout << (std::is_sorted(v_reverse.begin(), v_reverse.end(), std::greater<double>()) ?
                 "Sorted correctly\n" : "Not sorted\n");
+    }
+}
+
+
+void test_string(const boost::mpi::communicator &comm)
+{
+    psrs::mpi_vector<std::string> data(comm);
+
+    data.read_file("/usr/share/dict/words");
+
+    // Gather, randomly shuffle data, and redistribute
+    data.gather(0);
+    if (!comm.rank()) {
+        std::random_device rd;
+        std::mt19937 engine(rd());
+        std::shuffle(data.begin(), data.end(), engine);
+    }
+    data.scatter();
+
+    double elapsed_time = time_sort(data);
+    data.gather(0);
+
+    if (!comm.rank()) {
+        std::cout << "Normal sort time: " << elapsed_time << "s : " <<
+            (std::is_sorted(data.begin(), data.end()) ? "Sorted correctly\n" : "Not sorted\n");
     }
 }
 
