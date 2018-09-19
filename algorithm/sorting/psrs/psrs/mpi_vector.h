@@ -32,6 +32,9 @@ class mpi_vector
         // Constructor / assiangment
         mpi_vector();
         mpi_vector(const boost::mpi::communicator &c);
+        template <typename InputIt>
+            mpi_vector(const boost::mpi::communicator &c, InputIt begin, InputIt end,
+                    int root_process);
         mpi_vector(const mpi_vector &other);
         mpi_vector<T>& operator=(const mpi_vector &rhs);
 

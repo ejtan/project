@@ -30,6 +30,22 @@ mpi_vector<T>::mpi_vector(const boost::mpi::communicator &c) : comm(c)
 }
 
 
+/* mpi_vector::mpi_vector() constructor
+ * @INPUT: c = communicator to copy
+ * @INPUT: begin, end = pair of iterators to construct
+ * @INPUT: root_process = proc where data is from
+ *
+ * Constructs and distributes data. Calls mpi_vector::distribute().
+ */
+template <typename T>
+template <typename InputIt>
+mpi_vector<T>::mpi_vector(const boost::mpi::communicator &c, InputIt begin,
+        InputIt end, int root_process) : comm(c)
+{
+    distribute(begin, end, root_process);
+}
+
+
 /* mpi_vector::mpi_vector() copy constructor
  * @INPUT: other = mpi_vector to copy
  */
