@@ -4,6 +4,7 @@
 #include <functional>
 #include <algorithm>
 #include <cstdlib>
+#include <cctype>
 
 #include <boost/mpi/environment.hpp>
 #include <boost/mpi/communicator.hpp>
@@ -97,13 +98,21 @@ void test_string(const boost::mpi::communicator &comm)
     }
     data.scatter();
 
-    psrs::mpi_vector<std::string> reverse_data(data);
+    psrs::mpi_vector<std::string> reverse_data(data), case_insensitive_data(data);
 
     double elapsed_time = time_sort(data);
     data.gather(0);
 
     double reverse_elapsed_time = time_sort(reverse_data, std::greater<std::string>());
     reverse_data.gather(0);
+
+    auto case_insensitive_cmp = [](const std::string &lhs, const std::string &rhs) {
+        return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end(),
+                [](const char a, const char b) { return std::tolower(a) < std::tolower(b); });
+    };
+    double case_insensitive_time = time_sort(case_insensitive_data, case_insensitive_cmp);
+    case_insensitive_data.gather(0);
+
 
     if (!comm.rank()) {
         std::cout << "Test string\n";
@@ -112,6 +121,9 @@ void test_string(const boost::mpi::communicator &comm)
         std::cout << "Reverse sort time: " << reverse_elapsed_time << "s : " <<
             (std::is_sorted(reverse_data.begin(), reverse_data.end(), std::greater<std::string>()) ?
                 "Sorted correcctly\n" : "Not sorted\n");
+        std::cout << "Case insensitive sort time: " << case_insensitive_time << "s : " <<
+            (std::is_sorted(case_insensitive_data.begin(), case_insensitive_data.end(),
+                            case_insensitive_cmp) ? "Sorted correctly\n" : "Not sorted\n");
         std::cout << std::endl;
     }
 }
