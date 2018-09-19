@@ -97,13 +97,21 @@ void test_string(const boost::mpi::communicator &comm)
     }
     data.scatter();
 
+    psrs::mpi_vector<std::string> reverse_data(data);
+
     double elapsed_time = time_sort(data);
     data.gather(0);
+
+    double reverse_elapsed_time = time_sort(reverse_data, std::greater<std::string>());
+    reverse_data.gather(0);
 
     if (!comm.rank()) {
         std::cout << "Test string\n";
         std::cout << "Normal sort time: " << elapsed_time << "s : " <<
             (std::is_sorted(data.begin(), data.end()) ? "Sorted correctly\n" : "Not sorted\n");
+        std::cout << "Reverse sort time: " << reverse_elapsed_time << "s : " <<
+            (std::is_sorted(reverse_data.begin(), reverse_data.end(), std::greater<std::string>()) ?
+                "Sorted correcctly\n" : "Not sorted\n");
         std::cout << std::endl;
     }
 }
