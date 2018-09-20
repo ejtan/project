@@ -48,6 +48,7 @@ class mpi_vector
         void clear() noexcept;
         template <typename InputIt>
             iterator insert(const_iterator pos, InputIt begin, InputIt end);
+        void swap_vector(std::vector<T> &other);
 
         // Element / data access / communicator access
         reference operator[](size_type pos);

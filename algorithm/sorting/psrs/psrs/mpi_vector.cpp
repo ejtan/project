@@ -239,6 +239,18 @@ typename mpi_vector<T>::iterator mpi_vector<T>::insert(const_iterator pos,
 }
 
 
+/* swap_vector()
+ * @INPUT: other = vector to swap data with
+ *
+ * Swaps internal vector.
+ */
+template <typename T>
+void mpi_vector<T>::swap_vector(std::vector<T> &other)
+{
+    arr.swap(other);
+}
+
+
 /* reference operator[]
  * @INPUT: pos = index
  *
