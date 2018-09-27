@@ -21,13 +21,13 @@ class mpi_vector
 {
     public:
         // Typedef
-        typedef typename std::vector<T>::value_type      value_type;
-        typedef typename std::vector<T>::size_type       size_type;
-        typedef typename std::vector<T>::difference_type difference_type;
-        typedef typename std::vector<T>::reference       reference;
-        typedef typename std::vector<T>::const_reference const_reference;
-        typedef typename std::vector<T>::iterator        iterator;
-        typedef typename std::vector<T>::const_iterator  const_iterator;
+        typedef typename std::vector<T>::value_type             value_type;
+        typedef typename std::vector<T>::size_type              size_type;
+        typedef typename std::vector<T>::difference_type        difference_type;
+        typedef typename std::vector<T>::reference              reference;
+        typedef typename std::vector<T>::const_reference        const_reference;
+        typedef typename std::vector<T>::iterator               iterator;
+        typedef typename std::vector<T>::const_iterator         const_iterator;
         typedef typename std::vector<T>::reverse_iterator       reverse_iterator;
         typedef typename std::vector<T>::const_reverse_iterator const_reverse_iterator;
 
