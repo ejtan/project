@@ -28,6 +28,8 @@ class mpi_vector
         typedef typename std::vector<T>::const_reference const_reference;
         typedef typename std::vector<T>::iterator        iterator;
         typedef typename std::vector<T>::const_iterator  const_iterator;
+        typedef typename std::vector<T>::reverse_iterator       reverse_iterator;
+        typedef typename std::vector<T>::const_reverse_iterator const_reverse_iterator;
 
         // Constructor / assiangment
         mpi_vector();
@@ -73,6 +75,12 @@ class mpi_vector
         iterator end() noexcept;
         const_iterator end() const noexcept;
         const_iterator cend() const noexcept;
+        reverse_iterator rbegin() noexcept;
+        const_reverse_iterator rbegin() const noexcept;
+        const_reverse_iterator crbegin() const noexcept;
+        reverse_iterator rend() noexcept;
+        const_reverse_iterator rend() const noexcept;
+        const_reverse_iterator crend() const noexcept;
 
         // Other
         void read_file(const std::string &filepath);

@@ -442,6 +442,66 @@ typename mpi_vector<T>::const_iterator mpi_vector<T>::cend() const noexcept
 }
 
 
+/* rbegin()
+ * Returns begin reverse iterator
+ */
+template <typename T>
+typename mpi_vector<T>::reverse_iterator mpi_vector<T>::rbegin() noexcept
+{
+    return arr.rbegin();
+}
+
+
+/* rbegin()
+ * Returns begin const reverse iterator
+ */
+template <typename T>
+typename mpi_vector<T>::const_reverse_iterator mpi_vector<T>::rbegin() const noexcept
+{
+    return arr.crbegin();
+}
+
+
+/* crbegin()
+ * Returns begin const reverse iterator
+ */
+template <typename T>
+typename mpi_vector<T>::const_reverse_iterator mpi_vector<T>::crbegin() const noexcept
+{
+    return arr.crbegin();
+}
+
+
+/* rend()
+ * Returns end reverse iterator
+ */
+template <typename T>
+typename mpi_vector<T>::reverse_iterator mpi_vector<T>::rend() noexcept
+{
+    return arr.rend();
+}
+
+
+/* rend()
+ * Returns end const reverse iterator
+ */
+template <typename T>
+typename mpi_vector<T>::const_reverse_iterator mpi_vector<T>::rend() const noexcept
+{
+    return arr.crend();
+}
+
+
+/* crend()
+ * Returns end const reverse iterator
+ */
+template <typename T>
+typename mpi_vector<T>::const_reverse_iterator mpi_vector<T>::crend() const noexcept
+{
+    return arr.crend();
+}
+
+
 /* read_file
  */
 template <typename T>
