@@ -8,6 +8,7 @@ namespace utility {
 
 // message tags
 constexpr int data_tag = 1;
+constexpr int prompt_tag = 2;
 
 // Functions
 
