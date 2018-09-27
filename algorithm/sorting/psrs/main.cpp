@@ -132,7 +132,7 @@ template <typename T>
 double time_sort(psrs::mpi_vector<T> &v)
 {
     boost::mpi::timer sort_timer;
-    psrs::sort(v.get_comm(), v);
+    psrs::sort(v);
 
     return sort_timer.elapsed();
 }
@@ -142,7 +142,7 @@ template <typename T, class Compare>
 double time_sort(psrs::mpi_vector<T> &v, Compare cmp)
 {
     boost::mpi::timer sort_timer;
-    psrs::sort(v.get_comm(), v, cmp);
+    psrs::sort(v, cmp);
 
     return sort_timer.elapsed();
 }
