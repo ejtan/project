@@ -94,15 +94,15 @@ void sort_mpi_type_impl(const boost::mpi::communicator &comm,
  * Sort with default comparator operator<.
  */
 template <typename T>
-void sort(const boost::mpi::communicator &comm, psrs::mpi_vector<T> &data)
+void sort(psrs::mpi_vector<T> &data)
 {
     // Special case: single proc
-    if (comm.size() == 1) {
+    if (data.get_comm().size() == 1) {
         std::sort(data.begin(), data.end());
         return;
     }
 
-    detail::sort_mpi_type_impl(comm, data, std::less<T>());
+    detail::sort_mpi_type_impl(data.get_comm(), data, std::less<T>());
 }
 
 
@@ -114,15 +114,15 @@ void sort(const boost::mpi::communicator &comm, psrs::mpi_vector<T> &data)
  * Sort with callable comparator cmp.
  */
 template <typename T, class Compare>
-void sort(const boost::mpi::communicator &comm, psrs::mpi_vector<T> &data, Compare cmp)
+void sort(psrs::mpi_vector<T> &data, Compare cmp)
 {
     // Special case: single proc
-    if (comm.size() == 1) {
+    if (data.get_comm().size() == 1) {
         std::sort(data.begin(), data.end(), cmp);
         return;
     }
 
-    detail::sort_mpi_type_impl(comm, data, cmp);
+    detail::sort_mpi_type_impl(data.get_comm(), data, cmp);
 }
 
 
