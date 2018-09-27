@@ -555,4 +555,45 @@ void mpi_vector<T>::read_file(const std::string &filepath)
 }
 
 
+/* output()
+ * @INPUT: os = ostream
+ * @INPUT: root_process = process to output data
+ * @INPUT: delim = delimiter between elements. Defaults to space
+ *
+ * root_process gathers each procs data, in order and outputs their contents to an ostream
+ */
+template <typename T>
+void mpi_vector<T>::output(std::ostream &os, int root_process, const std::string &delim) const
+{
+    int p = comm.size();
+    int id = comm.rank();
+    int n = total_size();
+    std::ostream_iterator<T> out_it(os, delim.c_str());
+
+    if (p == 1) {
+        std::copy(arr.begin(), arr.end(), out_it);
+        return;
+    } // Special case: 1 process
+
+    if (id == root_process) {
+        std::vector<T> buffer(utility::blk_size(p-1, p, n));
+
+        for (int i = 0; i < p; i++) {
+            if (i == root_process) {
+                std::copy(arr.begin(), arr.end(), out_it);
+            } else {
+                comm.send(i, utility::prompt_tag);
+                comm.recv(i, utility::data_tag, buffer);
+                std::copy(buffer.begin(), buffer.end(), out_it);
+            } // Send data to root_process, if necessary, and output
+        } // Loop over all procs
+
+        std::cout << std::endl;
+    } else {
+        comm.recv(root_process, utility::prompt_tag);
+        comm.send(root_process, utility::data_tag, arr);
+    } // root_process manages data movement and output which everyone else outputs data
+}
+
+
 }; // namespace psrs

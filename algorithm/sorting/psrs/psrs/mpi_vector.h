@@ -84,6 +84,7 @@ class mpi_vector
 
         // Other
         void read_file(const std::string &filepath);
+        void output(std::ostream &os, int root_process, const std::string &delim=" ") const;
 
     private:
         boost::mpi::communicator comm;
