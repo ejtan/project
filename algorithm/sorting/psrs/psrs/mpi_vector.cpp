@@ -502,7 +502,10 @@ typename mpi_vector<T>::const_reverse_iterator mpi_vector<T>::crend() const noex
 }
 
 
-/* read_file
+/* read_file()
+ * @INPUT: filepath = path to file
+ *
+ * Opens a file, Reads its contents, and distributes it amoung each processor.
  */
 template <typename T>
 void mpi_vector<T>::read_file(const std::string &filepath)
