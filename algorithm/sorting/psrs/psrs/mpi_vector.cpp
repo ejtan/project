@@ -73,6 +73,38 @@ mpi_vector<T>& mpi_vector<T>::operator=(const mpi_vector<T> &rhs)
 }
 
 
+/* assign()
+ * @INPUT: count = number of elements to assign
+ * @INPUT: val = value to copy
+ */
+template <typename T>
+void mpi_vector<T>::assign(size_type count, const T &val)
+{
+    arr.assign(count, val);
+}
+
+
+/* assign()
+ * @INPUT: begin, end = pair of iterators to assign
+ */
+template <typename T>
+template <typename InputIt>
+void mpi_vector<T>::assign(InputIt begin, InputIt end)
+{
+    arr.assign(begin, end);
+}
+
+
+/* assign()
+ * @INPUT: lst = initalizer list
+ */
+template <typename T>
+void mpi_vector<T>::assign(std::initializer_list<T> lst)
+{
+    arr.assign(lst);
+}
+
+
 /* void mpi_vector::distribute
  * @INPUT: begin, end = pair of iterators representing the range to copy from
  * @INPUT root_process = process containing to pair of iterators

@@ -40,6 +40,11 @@ class mpi_vector
         mpi_vector(const mpi_vector &other);
         mpi_vector<T>& operator=(const mpi_vector &rhs);
 
+        void assign(size_type count, const T &val);
+        template <typename InputIt>
+            void assign(InputIt begin, InputIt end);
+        void assign(std::initializer_list<T> lst);
+
         // Communication
         template <typename InputIt>
             void distribute(InputIt begin, InputIt end, int root_process);
