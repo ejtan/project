@@ -373,6 +373,16 @@ typename mpi_vector<T>::size_type mpi_vector<T>::size() const noexcept
 }
 
 
+/* max_size()
+ * Returns the max size allowable on each processor.
+ */
+template <typename T>
+typename mpi_vector<T>::size_type mpi_vector<T>::max_size() const noexcept
+{
+    return arr.max_size();
+}
+
+
 /* reserve()
  * @INPUT: new_size = numer of elements to reserve
  */
@@ -380,6 +390,26 @@ template <typename T>
 void mpi_vector<T>::reserve(size_type new_size)
 {
     arr.reserve(new_size);
+}
+
+
+/* capacity()
+ * Returns the number of elements allocated
+ */
+template <typename T>
+typename mpi_vector<T>::size_type mpi_vector<T>::capacity() const noexcept
+{
+    return arr.capacity();
+}
+
+
+/* shirnk_to_fit()
+ * Shrinks vector to match its size
+ */
+template <typename T>
+void mpi_vector<T>::shrink_to_fit()
+{
+    arr.shrink_to_fit();
 }
 
 

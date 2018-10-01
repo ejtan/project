@@ -66,7 +66,10 @@ class mpi_vector
         size_type total_size(int root_proc) const;
         size_type total_size() const;
         size_type size() const noexcept;
+        size_type max_size() const noexcept;
         void reserve(size_type new_size);
+        size_type capacity() const noexcept;
+        void shrink_to_fit();
 
         // Iterators
         iterator begin() noexcept;
