@@ -251,6 +251,28 @@ void mpi_vector<T>::swap_vector(std::vector<T> &other)
 }
 
 
+/* at()
+ * @INPUT: pos = position
+ * Returns a reference to the element at arr[pos];
+ */
+template <typename T>
+typename mpi_vector<T>::reference mpi_vector<T>::at(size_type pos)
+{
+    return arr.at(pos);
+}
+
+
+/* at()
+ * @INPUT: pos = position
+ * Returns a const reference to the element at arr[pos];
+ */
+template <typename T>
+typename mpi_vector<T>::const_reference mpi_vector<T>::at(size_type pos) const
+{
+    return arr.at(pos);
+}
+
+
 /* reference operator[]
  * @INPUT: pos = index
  *
@@ -272,6 +294,46 @@ template <typename T>
 typename mpi_vector<T>::const_reference mpi_vector<T>::operator[](size_type pos) const
 {
     return arr[pos];
+}
+
+
+/* front()
+ * Returns a reference to the front of the vector
+ */
+template <typename T>
+typename mpi_vector<T>::reference mpi_vector<T>::front()
+{
+    return arr.front();
+}
+
+
+/* front()
+ * Returns a const reference to the front of the vector
+ */
+template <typename T>
+typename mpi_vector<T>::const_reference mpi_vector<T>::front() const
+{
+    return arr.front();
+}
+
+
+/* back()
+ * Returns a reference to the back of the vector
+ */
+template <typename T>
+typename mpi_vector<T>::reference mpi_vector<T>::back()
+{
+    return arr.back();
+}
+
+
+/* back()
+ * Returns a const reference to the back of the vector
+ */
+template <typename T>
+typename mpi_vector<T>::const_reference mpi_vector<T>::back() const
+{
+    return arr.back();
 }
 
 

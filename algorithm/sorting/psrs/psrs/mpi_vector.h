@@ -53,8 +53,14 @@ class mpi_vector
         void swap_vector(std::vector<T> &other);
 
         // Element / data access / communicator access
+        reference at(size_type pos);
+        const_reference at(size_type pos) const;
         reference operator[](size_type pos);
         const_reference operator[](size_type pos) const;
+        reference front();
+        const_reference front() const;
+        reference back();
+        const_reference back() const;
         T* data() noexcept;
         const T* data() const noexcept;
         std::vector<T> get_vector() noexcept;
