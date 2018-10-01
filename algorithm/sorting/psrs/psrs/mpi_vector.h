@@ -48,8 +48,23 @@ class mpi_vector
 
         // Modify
         void clear() noexcept;
+        iterator insert(const_iterator pos, const T &val);
+        iterator insert(const_iterator pos, T &&val);
+        iterator insert(const iterator pos, size_type n, const T &val);
         template <typename InputIt>
             iterator insert(const_iterator pos, InputIt begin, InputIt end);
+        iterator insert(const_iterator pos, std::initializer_list<T> lst);
+        template <typename ...Args>
+            iterator emplace(const_iterator pos, Args &&...args);
+        iterator erase(const_iterator pos);
+        iterator erase(const_iterator begin, const_iterator end);
+        void push_back(const T& val);
+        void push_back(T &&val);
+        template <typename ...Args>
+            reference emplace_back(Args &&...args);
+        void pop_back();
+        void resize(size_type count);
+        void resize(size_type count, const T &val);
         void swap_vector(std::vector<T> &other);
 
         // Element / data access / communicator access

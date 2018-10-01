@@ -228,6 +228,39 @@ void mpi_vector<T>::clear() noexcept
 
 /* insert()
  * @INPUT: pos = iterator position to insert
+ * @INPUT: val = item to copy
+ */
+template <typename T>
+typename mpi_vector<T>::iterator mpi_vector<T>::insert(const_iterator pos, const T &val)
+{
+    return arr.insert(pos, val);
+}
+
+/* insert()
+ * @INPUT: pos = iterator position to insert
+ * @INPUT: val = item to move
+ */
+template <typename T>
+typename mpi_vector<T>::iterator mpi_vector<T>::insert(const_iterator pos, T &&val)
+{
+    return arr.insert(pos, std::move(val));
+}
+
+
+/* insert()
+ * @INPUT: pos = iterator position to insert
+ * @INPUT: n = number of items to insert
+ * @INPUT: val = item to copy
+ */
+template <typename T>
+typename mpi_vector<T>::iterator mpi_vector<T>::insert(const iterator pos, size_type n, const T &val)
+{
+    return arr.insert(pos, n, val);
+}
+
+
+/* insert()
+ * @INPUT: pos = iterator position to insert
  * @INPUT: begin, end = range of iterators to insert
  */
 template <typename T>
@@ -236,6 +269,112 @@ typename mpi_vector<T>::iterator mpi_vector<T>::insert(const_iterator pos,
         InputIt begin, InputIt end)
 {
     return arr.insert(pos, begin, end);
+}
+
+
+/* insert()
+ * @INPUT: pos = iterator position to insert
+ * @INPUT: lst = initializer_list
+ */
+template <typename T>
+typename mpi_vector<T>::iterator mpi_vector<T>::insert(const_iterator pos,
+        std::initializer_list<T> lst)
+{
+    return arr.insert(pos, lst);
+}
+
+
+/* emplace()
+ * @INPUT: pos = iterator position to insert
+ * @INPUT: args = arguments to insert
+ */
+template <typename T>
+template <typename ...Args>
+typename mpi_vector<T>::iterator mpi_vector<T>::emplace(const_iterator pos, Args &&...args)
+{
+    return arr.insert(pos, std::forward(args)...);
+}
+
+
+/* erase()
+ * @INPUT: pos = iterator to position to erase
+ */
+template <typename T>
+typename mpi_vector<T>::iterator mpi_vector<T>::erase(const_iterator pos)
+{
+    return arr.erase(pos);
+}
+
+
+/* erase()
+ * @INPUT: begin = begin iterator
+ * @INPUT: end = end iterator
+ */
+template <typename T>
+typename mpi_vector<T>::iterator mpi_vector<T>::erase(const_iterator begin, const_iterator end)
+{
+    return arr.erase(begin, end);
+}
+
+
+/* push_back()
+ * @INPUT: val = value to add to the end
+ */
+template <typename T>
+void mpi_vector<T>::push_back(const T &val)
+{
+    arr.push_back(val);
+}
+
+
+/* push_back()
+ * @INPUT: val = value to move to the end
+ */
+template <typename T>
+void mpi_vector<T>::push_back(T &&val)
+{
+    arr.push_back(std::move(val));
+}
+
+
+/* emplace_back()
+ * @INPUT: args = elements to append to vector
+ */
+template <typename T>
+template <typename ...Args>
+typename mpi_vector<T>::reference mpi_vector<T>::emplace_back(Args &&...args)
+{
+    return arr.emplace_back(std::forward(args)...);
+}
+
+
+/* pop_back()
+ */
+template <typename T>
+void mpi_vector<T>::pop_back()
+{
+    arr.pop_back();
+}
+
+
+/* resize()
+ * @INPUT: count = new size
+ */
+template <typename T>
+void mpi_vector<T>::resize(size_type count)
+{
+    arr.resize(count);
+}
+
+
+/* resize()
+ * @INPUT: count = new size
+ * @INPUT: val = value of all elements
+ */
+template <typename T>
+void mpi_vector<T>::resize(size_type count, const T &val)
+{
+    arr.resize(count, val);
 }
 
 
