@@ -79,4 +79,37 @@ int main()
 
     if (!comm.rank())
         std::cout << "passed.\n";
+
+    // Test move constructor
+    psrs::mpi_vector<int> d(std::move(c));
+
+    if (!comm.rank())
+        std::cout << "Testing move constructor... ";
+
+    for (int i = 0; i < comm.size(); i++) {
+        if (i == comm.rank()) {
+            // Use a as a reference to compare to
+            if (d.size() != a.size()) {
+                std::cout << "Error: Move assiangment operator on proc " << i
+                    << "c.size() doesn't match with reference data.\n";
+                env.abort(-1);
+            }
+
+            if (c.size() != 0) {
+                std::cout << "Error: Move assiangment operator on proc " << i
+                    << "c.size() is nonzero.\n";
+                env.abort(-1);
+            }
+
+            if (!std::equal(a.begin(), a.end(), d.begin())) {
+                std::cout << "Error: Move assiangment operator on proc " << i
+                    << "doesn't match with reference data.\n";
+                env.abort(-1);
+            }
+        }
+        comm.barrier();
+    }
+
+    if (!comm.rank())
+        std::cout << "passed.\n";
 }
