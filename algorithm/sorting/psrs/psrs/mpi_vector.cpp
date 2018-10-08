@@ -73,6 +73,37 @@ mpi_vector<T>& mpi_vector<T>::operator=(const mpi_vector<T> &rhs)
 }
 
 
+/* operator=
+ * @INPUT: rhs = object to move
+ */
+template <typename T>
+mpi_vector<T>& mpi_vector<T>::operator=(mpi_vector<T> &&rhs)
+{
+    if (this == &rhs)
+        return *this;
+
+    // Note: Communicator is copied since opve assiangment operator is not supported
+    comm = rhs.comm;
+    arr = std::move(rhs.arr);
+    is_gathered = std::move(rhs.is_gathered);
+
+    return *this;
+}
+
+
+/* operator=
+ * @INPUT: lst = initalizer list
+ */
+template <typename T>
+mpi_vector<T>& mpi_vector<T>::operator=(std::initializer_list<T> lst)
+{
+    // Note: comm will be default initalized
+    arr = lst;
+
+    return *this;
+}
+
+
 /* assign()
  * @INPUT: count = number of elements to assign
  * @INPUT: val = value to copy

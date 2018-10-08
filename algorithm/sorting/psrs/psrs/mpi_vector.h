@@ -38,7 +38,10 @@ class mpi_vector
             mpi_vector(const boost::mpi::communicator &c, InputIt begin, InputIt end,
                     int root_process);
         mpi_vector(const mpi_vector &other);
+
         mpi_vector<T>& operator=(const mpi_vector &rhs);
+        mpi_vector<T>& operator=(mpi_vector &&rhs);
+        mpi_vector<T>& operator=(std::initializer_list<T> lst);
 
         void assign(size_type count, const T &val);
         template <typename InputIt>
