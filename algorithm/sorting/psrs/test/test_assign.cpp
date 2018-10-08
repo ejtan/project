@@ -80,6 +80,32 @@ int main()
     if (!comm.rank())
         std::cout << "passed.\n";
 
+    // Test copy constructor
+    psrs::mpi_vector<int> e(a);
+
+    if (!comm.rank())
+        std::cout << "Testing copy constructor... ";
+
+    for (int i = 0; i < comm.size(); i++) {
+        if (i == comm.rank()) {
+            if (e.size() != a.size()) {
+                std::cout << "Error: Copy assiangment operator on proc " << i
+                    << "e.size() doesn't match with reference data.\n";
+                env.abort(-1);
+            }
+
+            if (!std::equal(a.begin(), a.end(), e.begin())) {
+                std::cout << "Error: Copy assiangment operator on proc " << i
+                    << "doesn't match with reference data.\n";
+                env.abort(-1);
+            }
+        }
+        comm.barrier();
+    }
+
+    if (!comm.rank())
+        std::cout << "passed.\n";
+
     // Test move constructor
     psrs::mpi_vector<int> d(std::move(c));
 
