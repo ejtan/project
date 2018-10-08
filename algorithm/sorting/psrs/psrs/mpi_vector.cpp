@@ -55,6 +55,19 @@ mpi_vector<T>::mpi_vector(const mpi_vector &other) : comm(other.comm), arr(other
 }
 
 
+/* mpi_vector::mpi_vector() move constructor
+ * @INPUT: other = mpi_vector to move
+ *
+ * Moves other to *this. Note that comm is copy constructed because other needs a communcator to
+ * function.
+ */
+template <typename T>
+mpi_vector<T>::mpi_vector(mpi_vector &&other) :
+    comm(other.comm), arr(std::move(other.arr)), is_gathered(std::move(other.is_gathered))
+{
+}
+
+
 /* mpi_vector& operator=
  * @INPUT: rhs = vector to copy into this object.
  */
