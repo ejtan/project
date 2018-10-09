@@ -467,6 +467,16 @@ void mpi_vector<T>::swap_vector(std::vector<T> &other)
 }
 
 
+/* move_vector()
+ * @INPUT: other = vector to move
+ */
+template <typename T>
+void mpi_vector<T>::move_vector(std::vector<T> &&other)
+{
+    arr = std::move(other);
+}
+
+
 /* at()
  * @INPUT: pos = position
  * Returns a reference to the element at arr[pos];

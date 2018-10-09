@@ -75,6 +75,7 @@ class mpi_vector
         void resize(size_type count);
         void resize(size_type count, const T &val);
         void swap_vector(std::vector<T> &other);
+        void move_vector(std::vector<T> &&other);
 
         // Element / data access / communicator access
         reference at(size_type pos);
