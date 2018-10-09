@@ -59,9 +59,9 @@ void sort_mpi_type_impl(const boost::mpi::communicator &comm,
         send_disp.push_back(static_cast<int>(std::distance(data.begin(), it)));
     }
 
-    for (auto it = send_disp.begin(); it != send_disp.end() - 1; ++it)
-        send_cnt.push_back(*(it + 1) - *(it));
-    send_cnt.push_back(data.size() - *(send_disp.end() - 1));
+    send_cnt.resize(send_disp.size());
+    std::adjacent_difference(send_disp.begin() + 1, send_disp.end() - 1, send_cnt.begin());
+    send_cnt.back() = data.size() - send_disp.back();
 
     // Generate recv displacement and count vecor
     std::vector<int> recv_disp, recv_cnt;
