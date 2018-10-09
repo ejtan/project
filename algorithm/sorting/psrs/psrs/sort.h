@@ -79,8 +79,8 @@ void sort_mpi_type_impl(const boost::mpi::communicator &comm,
     // Perform final sort of data
     std::sort(tmp.begin(), tmp.end(), cmp);
 
-    // Swap tmp vector with data's internal vector.
-    data.swap_vector(tmp);
+    // move tmp vector with data's internal vector.
+    data.move_vector(std::move(tmp));
 }
 
 
