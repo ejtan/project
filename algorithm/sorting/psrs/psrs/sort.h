@@ -51,13 +51,15 @@ void sort_mpi_type_impl(const boost::mpi::communicator &comm,
     boost::mpi::broadcast(comm, pivots, 0);
 
     // Generate send displacement and count vectors for all to all
-    std::vector<int> send_disp, send_cnt;
+    std::vector<int> send_disp(p), send_cnt;
 
-    send_disp.push_back(0);
-    for (const auto &piv : pivots) {
-        auto it = std::lower_bound(data.begin(), data.end(), piv, cmp);
-        send_disp.push_back(static_cast<int>(std::distance(data.begin(), it)));
-    }
+    // Generate displacements by creating partitions based on pivots
+    send_disp.front() = 0;
+    std::transform(pivots.begin(), pivots.end(), send_disp.begin() + 1,
+            [&data, &cmp](auto piv)->int {
+                auto it = std::lower_bound(data.begin(), data.end(), piv, cmp);
+                return std::distance(data.begin(), it);
+            });
 
     send_cnt.resize(send_disp.size());
     std::adjacent_difference(send_disp.begin() + 1, send_disp.end() - 1, send_cnt.begin());
